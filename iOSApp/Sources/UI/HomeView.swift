@@ -110,11 +110,12 @@ struct CameraBottomBar: View {
     var body: some View {
         HStack(spacing: 8) {
             Button {
-                Task { await model.applyInstagramLiveCrop() }
+                Task { await model.toggleInstagramClip() }
             } label: {
-                Label("Insta Live", systemImage: "rectangle.portrait.crop")
+                Label(model.instagramClipActive ? "Cerrar clip" : "Clip IG", systemImage: model.instagramClipActive ? "stop.circle.fill" : "scissors")
             }
-            .buttonStyle(CameraTextButtonStyle(tint: .pink))
+            .buttonStyle(CameraTextButtonStyle(tint: model.instagramClipActive ? .red : .pink))
+            .disabled(model.instagramClipCommandInFlight)
 
             Spacer(minLength: 4)
 

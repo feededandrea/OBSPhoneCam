@@ -105,6 +105,7 @@ public enum ControlCommand: String, Codable, Sendable, CaseIterable {
     case saveReplayBuffer
     case markClip
     case applyInstagramLiveCrop
+    case toggleInstagramClip
 }
 
 public struct ControlPacket: Codable, Sendable, Equatable {

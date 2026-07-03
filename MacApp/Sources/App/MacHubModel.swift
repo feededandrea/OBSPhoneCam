@@ -43,6 +43,9 @@ final class MacHubModel: ObservableObject {
     private var lastAudioMeterBroadcast = Date.distantPast
     private var lastAudioMeterPoll = Date.distantPast
     private var scenePreviewRefreshIndex = 0
+    private var instagramClipStartedAt: Date?
+    private var isTogglingInstagramClip = false
+    private var lastInstagramClipToggleAt = Date.distantPast
 
     init() {
         self.obsConfig = OBSConnectionConfigStore.load()
@@ -223,6 +226,69 @@ final class MacHubModel: ObservableObject {
         }
     }
 
+    private func toggleInstagramClip() async {
+        guard !isTogglingInstagramClip else { return }
+        guard Date().timeIntervalSince(lastInstagramClipToggleAt) > 0.8 else { return }
+        lastInstagramClipToggleAt = Date()
+        isTogglingInstagramClip = true
+        defer { isTogglingInstagramClip = false }
+
+        if instagramClipStartedAt == nil {
+            await beginInstagramClip()
+        } else {
+            await finishInstagramClip()
+        }
+    }
+
+    private func beginInstagramClip() async {
+        do {
+            obsStatus = try await obsClient.refreshStatus()
+            guard obsStatus.replayBufferAvailable else {
+                logger.log(.warning, .clips, "No se puede armar Clip IG: Replay Buffer no disponible en OBS")
+                return
+            }
+            if !obsStatus.replayBufferActive {
+                try await obsClient.startReplayBuffer()
+                try? await Task.sleep(nanoseconds: 300_000_000)
+                obsStatus = try await obsClient.refreshStatus()
+            }
+            guard obsStatus.replayBufferActive else {
+                logger.log(.warning, .clips, "No se puede armar Clip IG: Replay Buffer no quedó activo")
+                return
+            }
+            instagramClipStartedAt = Date()
+            logger.log(.info, .clips, "Clip IG armado")
+        } catch {
+            logger.log(.error, .clips, "No se pudo armar Clip IG: \(error.localizedDescription)")
+        }
+    }
+
+    private func finishInstagramClip() async {
+        let startedAt = instagramClipStartedAt
+        instagramClipStartedAt = nil
+        let duration = startedAt.map { max(1, Date().timeIntervalSince($0)) }
+        let label: String
+        if let duration {
+            label = "Clip IG \(Int(round(duration)))s"
+        } else {
+            label = "Clip IG"
+        }
+
+        guard obsStatus.replayBufferAvailable, obsStatus.replayBufferActive else {
+            logger.log(.warning, .clips, "No se pudo cerrar Clip IG: Replay Buffer no está activo")
+            return
+        }
+
+        do {
+            let clip = try await clipManager.saveReplayBuffer(label: label, durationFromEnd: duration)
+            clips.insert(clip, at: 0)
+            logger.log(.info, .clips, "Clip IG guardado: \(clip.filePath)")
+            await prepareInstagramDraft(for: clip)
+        } catch {
+            logger.log(.error, .clips, "No se pudo guardar Clip IG: \(error.localizedDescription)")
+        }
+    }
+
     private func defaultInstagramCaption(for clip: ClipRecord) -> String {
         var parts = ["\(clip.label)"]
         if let sceneName = clip.sceneName {
@@ -258,9 +324,8 @@ final class MacHubModel: ObservableObject {
                 guard let sceneName = packet.arguments["sceneName"], !sceneName.isEmpty else { return }
                 try await obsClient.setCurrentProgramScene(sceneName)
                 obsStatus = try await obsClient.refreshStatus()
-            case .applyInstagramLiveCrop:
-                try await obsClient.applyInstagramLiveCrop()
-                obsStatus = try await obsClient.refreshStatus()
+            case .applyInstagramLiveCrop, .toggleInstagramClip:
+                await toggleInstagramClip()
             case .restartConnection, .switchCamera, .muteAudio, .unmuteAudio:
                 logger.log(.debug, .device, "Local iPhone command ignored by Mac Hub: \(packet.command.rawValue)", deviceID: deviceID)
             }

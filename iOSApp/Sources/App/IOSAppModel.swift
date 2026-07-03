@@ -21,6 +21,9 @@ final class IOSAppModel: ObservableObject {
     @Published var macPort: Int = 7777
     @Published var lastError: String?
     @Published var cameraAvailable = true
+    @Published private(set) var instagramClipActive = false
+    @Published private(set) var instagramClipCommandInFlight = false
+    private var lastInstagramClipCommandAt = Date.distantPast
 
     let cameraManager = CameraCaptureManager()
     let hubDiscovery = MacHubDiscoveryService()
@@ -215,16 +218,20 @@ final class IOSAppModel: ObservableObject {
         persistConnectionPreferences()
     }
 
-    func sendOBSCommand(_ command: ControlCommand) async {
+    @discardableResult
+    func sendOBSCommand(_ command: ControlCommand) async -> Bool {
         await sendOBSCommand(command, arguments: [:])
     }
 
-    func sendOBSCommand(_ command: ControlCommand, arguments: [String: String]) async {
+    @discardableResult
+    func sendOBSCommand(_ command: ControlCommand, arguments: [String: String]) async -> Bool {
         do {
             try await transport.sendControl(ControlPacket(command: command, arguments: arguments))
+            return true
         } catch {
             lastError = error.localizedDescription
             logger.log(.error, .obs, "Failed sending OBS command proxy: \(error.localizedDescription)", deviceID: identity.id)
+            return false
         }
     }
 
@@ -232,8 +239,21 @@ final class IOSAppModel: ObservableObject {
         await sendOBSCommand(.switchScene, arguments: ["sceneName": scene.sceneName])
     }
 
+    func toggleInstagramClip() async {
+        guard !instagramClipCommandInFlight else { return }
+        guard Date().timeIntervalSince(lastInstagramClipCommandAt) > 0.8 else { return }
+        lastInstagramClipCommandAt = Date()
+        instagramClipCommandInFlight = true
+        defer { instagramClipCommandInFlight = false }
+
+        let sent = await sendOBSCommand(.toggleInstagramClip)
+        if sent {
+            instagramClipActive.toggle()
+        }
+    }
+
     func applyInstagramLiveCrop() async {
-        await sendOBSCommand(.applyInstagramLiveCrop)
+        await toggleInstagramClip()
     }
 
     private func applyOBSState(_ packet: OBSStatePacket) {

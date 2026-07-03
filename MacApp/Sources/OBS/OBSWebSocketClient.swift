@@ -173,32 +173,9 @@ final class OBSWebSocketClient: ObservableObject {
         return Data(base64Encoded: base64)
     }
 
-    func applyInstagramLiveCrop(sourceName: String = "OBS Phone Cam") async throws {
+    func applyInstagramLiveCrop(sourceName _: String = "OBS Phone Cam") async throws {
         guard isConnected else { throw OBSWebSocketError.notConnected }
-        guard let sceneName = try await sendRequest("GetCurrentProgramScene")?["currentProgramSceneName"]?.stringValue else {
-            throw OBSWebSocketError.requestFailed("No se pudo obtener la escena actual de OBS")
-        }
-        guard let itemID = try await sendRequest("GetSceneItemId", data: [
-            "sceneName": .string(sceneName),
-            "sourceName": .string(sourceName)
-        ])?["sceneItemId"]?.intValue else {
-            throw OBSWebSocketError.requestFailed("No se encontró la fuente \(sourceName) en la escena actual")
-        }
-
-        _ = try await sendRequest("SetSceneItemTransform", data: [
-            "sceneName": .string(sceneName),
-            "sceneItemId": .int(itemID),
-            "sceneItemTransform": .object([
-                "cropLeft": .int(656),
-                "cropRight": .int(656),
-                "cropTop": .int(0),
-                "cropBottom": .int(0),
-                "boundsType": .string("OBS_BOUNDS_SCALE_INNER"),
-                "boundsWidth": .double(608),
-                "boundsHeight": .double(1080),
-                "alignment": .int(5)
-            ])
-        ])
+        AppLogger.shared.log(.warning, .obs, "applyInstagramLiveCrop is deprecated; ignoring transform request")
     }
 
     func upsertBrowserSource(inputName: String, url: String, sceneName preferredSceneName: String? = nil, width: Int = 1920, height: Int = 1080) async throws {

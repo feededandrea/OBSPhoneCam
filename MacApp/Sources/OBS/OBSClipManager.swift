@@ -1,4 +1,5 @@
 import Foundation
+import AVFoundation
 
 struct ClipRecord: Identifiable, Codable, Hashable {
     let id: UUID
@@ -23,12 +24,13 @@ struct ClipRecord: Identifiable, Codable, Hashable {
 @MainActor
 final class OBSClipManager {
     private let obsClient: OBSWebSocketClient
+    private let trimmer = ClipTrimmerService()
 
     init(obsClient: OBSWebSocketClient) {
         self.obsClient = obsClient
     }
 
-    func saveReplayBuffer(label: String) async throws -> ClipRecord {
+    func saveReplayBuffer(label: String, durationFromEnd: TimeInterval? = nil) async throws -> ClipRecord {
         let beforeSave = await recentVideoFiles()
         let sceneName = try? await obsClient.refreshStatus().currentScene
         try await obsClient.saveReplayBuffer()
@@ -37,13 +39,19 @@ final class OBSClipManager {
         let afterSave = await recentVideoFiles()
         let previousPaths = Set(beforeSave.map(\.path))
         let newest = afterSave.first { !previousPaths.contains($0.path) } ?? afterSave.first
-        return ClipRecord(
+        let clip = ClipRecord(
             label: label,
             filePath: newest?.path ?? "OBS Replay Buffer output folder",
             sceneName: sceneName,
             durationSeconds: newest?.durationSeconds ?? 30,
             isInstagramReady: newest != nil
         )
+
+        guard let newest, let durationFromEnd, durationFromEnd > 0.5 else {
+            return clip
+        }
+
+        return await trimReplayTail(clip, inputURL: newest.url, requestedDuration: durationFromEnd) ?? clip
     }
 
     func prepareInstagramVideo(from clip: ClipRecord) async throws -> ClipRecord {
@@ -119,6 +127,44 @@ final class OBSClipManager {
             .appendingPathComponent("Movies")
             .appendingPathComponent("OBSPhoneCam")
             .appendingPathComponent("Instagram Drafts")
+    }
+
+    private func clipOutputDirectory() -> URL {
+        FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Movies")
+            .appendingPathComponent("OBSPhoneCam")
+            .appendingPathComponent("Clips")
+    }
+
+    private func trimReplayTail(_ clip: ClipRecord, inputURL: URL, requestedDuration: TimeInterval) async -> ClipRecord? {
+        do {
+            let asset = AVURLAsset(url: inputURL)
+            let assetDuration = try await asset.load(.duration).seconds
+            guard assetDuration.isFinite, assetDuration > 0 else { return nil }
+
+            let duration = min(max(0.5, requestedDuration), assetDuration)
+            let start = max(0, assetDuration - duration)
+            let outputDirectory = clipOutputDirectory()
+            try FileManager.default.createDirectory(at: outputDirectory, withIntermediateDirectories: true)
+            let outputURL = outputDirectory.appendingPathComponent(safeFileName("\(clip.label)-\(clip.createdAt.timeIntervalSince1970).mp4"))
+            if FileManager.default.fileExists(atPath: outputURL.path) {
+                try FileManager.default.removeItem(at: outputURL)
+            }
+
+            try await trimmer.trim(inputURL: inputURL, outputURL: outputURL, start: start, duration: duration)
+            return ClipRecord(
+                id: clip.id,
+                createdAt: clip.createdAt,
+                label: clip.label,
+                filePath: outputURL.path,
+                sceneName: clip.sceneName,
+                durationSeconds: duration,
+                isInstagramReady: true
+            )
+        } catch {
+            AppLogger.shared.log(.warning, .clips, "No se pudo recortar Clip IG; usando replay completo: \(error.localizedDescription)")
+            return nil
+        }
     }
 
     private func safeFileName(_ name: String) -> String {
