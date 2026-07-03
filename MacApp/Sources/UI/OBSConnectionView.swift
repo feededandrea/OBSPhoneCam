@@ -21,7 +21,7 @@ struct OBSConnectionView: View {
                     Text(message)
                         .foregroundStyle(message.hasPrefix("No se pudo") ? .red : .secondary)
                 }
-                Text("En OBS: + > OBS Phone Cam. La app Mac publica el último frame recibido en /tmp/obsphonecam-framebuffer.bin.")
+                Text("En OBS: + > OBS Phone Cam. La app Mac publica el último frame recibido en memoria compartida local.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -11,11 +11,14 @@ final class StreamDecoder {
     private let queue = DispatchQueue(label: "obsphonecam.mac.h264.decoder", qos: .userInitiated)
     private let ciContext = CIContext()
     private let colorSpace = CGColorSpaceCreateDeviceRGB()
+    private let previewLock = NSLock()
+    private let previewJPEGIntervalNs: UInt64 = 250_000_000
     private var formatDescription: CMVideoFormatDescription?
     private var decompressionSession: VTDecompressionSession?
     private var sps: Data?
     private var pps: Data?
     private var pendingSequence: UInt64 = 0
+    private var lastPreviewJPEGNs: UInt64 = 0
 
     func decodeVideo(_ packet: StreamPacket) {
         switch packet.codec {
@@ -181,9 +184,18 @@ final class StreamDecoder {
 
     private func handleDecodedFrame(_ pixelBuffer: CVPixelBuffer, sequence: UInt64) {
         onPixelBuffer?(pixelBuffer, sequence)
-        if let jpeg = previewJPEG(from: pixelBuffer) {
+        if shouldEmitPreviewJPEG(), let jpeg = previewJPEG(from: pixelBuffer) {
             onPreviewJPEG?(jpeg, sequence)
         }
+    }
+
+    private func shouldEmitPreviewJPEG() -> Bool {
+        let now = DispatchTime.now().uptimeNanoseconds
+        previewLock.lock()
+        defer { previewLock.unlock() }
+        guard now - lastPreviewJPEGNs >= previewJPEGIntervalNs else { return false }
+        lastPreviewJPEGNs = now
+        return true
     }
 
     private func previewJPEG(from pixelBuffer: CVPixelBuffer) -> Data? {

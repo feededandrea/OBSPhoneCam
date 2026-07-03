@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
@@ -16,7 +17,7 @@
 #define OPC_HEADER_SIZE 64U
 #define OPC_DEFAULT_WIDTH 1920U
 #define OPC_DEFAULT_HEIGHT 1080U
-#define OPC_DEFAULT_PATH "/tmp/obsphonecam-framebuffer.bin"
+#define OPC_DEFAULT_PATH "/tmp/obsphonecam-framebuffer.shm"
 
 OBS_DECLARE_MODULE()
 OBS_MODULE_AUTHOR("OBSPhoneCam")
@@ -47,6 +48,9 @@ struct opc_source {
 	float fallback_phase;
 	uint8_t *fallback_pixels;
 	size_t fallback_capacity;
+	int fd;
+	void *mapped;
+	size_t mapped_size;
 };
 
 enum opc_frame_status {
@@ -78,9 +82,26 @@ static obs_properties_t *opc_properties(void *data)
 {
 	UNUSED_PARAMETER(data);
 	obs_properties_t *props = obs_properties_create();
-	obs_properties_add_text(props, "framebuffer_path", "Framebuffer path", OBS_TEXT_DEFAULT);
+	obs_properties_add_text(props, "framebuffer_path", "Shared memory path", OBS_TEXT_DEFAULT);
 	obs_properties_add_bool(props, "show_test_pattern", "Show test pattern when no iPhone frame exists");
 	return props;
+}
+
+static void opc_close_mapping(struct opc_source *ctx)
+{
+	if (!ctx)
+		return;
+
+	if (ctx->mapped && ctx->mapped != MAP_FAILED) {
+		munmap(ctx->mapped, ctx->mapped_size);
+		ctx->mapped = NULL;
+		ctx->mapped_size = 0;
+	}
+
+	if (ctx->fd >= 0) {
+		close(ctx->fd);
+		ctx->fd = -1;
+	}
 }
 
 static void opc_update(void *data, obs_data_t *settings)
@@ -90,7 +111,10 @@ static void opc_update(void *data, obs_data_t *settings)
 	if (!path || !*path)
 		path = OPC_DEFAULT_PATH;
 
-	snprintf(ctx->path, sizeof(ctx->path), "%s", path);
+	if (strncmp(ctx->path, path, sizeof(ctx->path)) != 0) {
+		opc_close_mapping(ctx);
+		snprintf(ctx->path, sizeof(ctx->path), "%s", path);
+	}
 	ctx->show_test_pattern = obs_data_get_bool(settings, "show_test_pattern");
 }
 
@@ -103,6 +127,7 @@ static void *opc_create(obs_data_t *settings, obs_source_t *source)
 	ctx->source = source;
 	ctx->width = OPC_DEFAULT_WIDTH;
 	ctx->height = OPC_DEFAULT_HEIGHT;
+	ctx->fd = -1;
 	snprintf(ctx->path, sizeof(ctx->path), "%s", OPC_DEFAULT_PATH);
 	opc_update(ctx, settings);
 
@@ -118,6 +143,7 @@ static void opc_destroy(void *data)
 
 	free(ctx->pixels);
 	free(ctx->fallback_pixels);
+	opc_close_mapping(ctx);
 	free(ctx);
 }
 
@@ -158,52 +184,63 @@ static bool opc_ensure_capacity(uint8_t **buffer, size_t *capacity, size_t neede
 
 static enum opc_frame_status opc_load_frame(struct opc_source *ctx)
 {
-	int fd = open(ctx->path, O_RDONLY);
-	if (fd < 0)
-		return OPC_FRAME_ERROR;
+	if (ctx->fd < 0) {
+		ctx->fd = open(ctx->path, O_RDONLY);
+		if (ctx->fd < 0)
+			return OPC_FRAME_ERROR;
+	}
 
 	struct stat st;
-	if (fstat(fd, &st) != 0 || st.st_size < (off_t)sizeof(struct opc_header)) {
-		close(fd);
+	if (fstat(ctx->fd, &st) != 0 || st.st_size < (off_t)OPC_HEADER_SIZE) {
+		opc_close_mapping(ctx);
 		return OPC_FRAME_ERROR;
 	}
 
-	struct opc_header header;
-	if (!opc_read_exact(fd, &header, sizeof(header))) {
-		close(fd);
-		return OPC_FRAME_ERROR;
+	if (!ctx->mapped || ctx->mapped_size != (size_t)st.st_size) {
+		if (ctx->mapped && ctx->mapped != MAP_FAILED)
+			munmap(ctx->mapped, ctx->mapped_size);
+
+		ctx->mapped = mmap(NULL, (size_t)st.st_size, PROT_READ, MAP_SHARED, ctx->fd, 0);
+		if (ctx->mapped == MAP_FAILED) {
+			ctx->mapped = NULL;
+			ctx->mapped_size = 0;
+			opc_close_mapping(ctx);
+			return OPC_FRAME_ERROR;
+		}
+		ctx->mapped_size = (size_t)st.st_size;
 	}
 
+	struct opc_header *mapped_header = (struct opc_header *)ctx->mapped;
+	__sync_synchronize();
+	const uint64_t generation_before = mapped_header->reserved0;
+	if ((generation_before & 1ULL) != 0)
+		return OPC_FRAME_UNCHANGED;
+
+	struct opc_header header = *mapped_header;
 	if (header.magic != OPC_MAGIC || header.version != 1 || header.header_size != OPC_HEADER_SIZE ||
 	    header.width == 0 || header.height == 0 || header.bytes_per_row < header.width * 4 ||
 	    header.payload_size == 0 || header.payload_size > 64ULL * 1024ULL * 1024ULL) {
-		close(fd);
 		return OPC_FRAME_ERROR;
 	}
 
 	if (header.sequence == ctx->last_sequence) {
-		close(fd);
 		return OPC_FRAME_UNCHANGED;
 	}
 
 	const uint64_t expected_min = (uint64_t)header.bytes_per_row * (uint64_t)header.height;
-	if (header.payload_size < expected_min || st.st_size < (off_t)(header.header_size + header.payload_size)) {
-		close(fd);
+	if (header.payload_size < expected_min || ctx->mapped_size < (size_t)(header.header_size + header.payload_size)) {
 		return OPC_FRAME_ERROR;
 	}
 
 	if (!opc_ensure_capacity(&ctx->pixels, &ctx->pixel_capacity, (size_t)header.payload_size)) {
-		close(fd);
 		return OPC_FRAME_ERROR;
 	}
 
-	if (lseek(fd, (off_t)header.header_size, SEEK_SET) < 0 ||
-	    !opc_read_exact(fd, ctx->pixels, (size_t)header.payload_size)) {
-		close(fd);
-		return OPC_FRAME_ERROR;
-	}
-
-	close(fd);
+	memcpy(ctx->pixels, (uint8_t *)ctx->mapped + header.header_size, (size_t)header.payload_size);
+	__sync_synchronize();
+	const uint64_t generation_after = ((struct opc_header *)ctx->mapped)->reserved0;
+	if (generation_before != generation_after || (generation_after & 1ULL) != 0)
+		return OPC_FRAME_UNCHANGED;
 
 	ctx->width = header.width;
 	ctx->height = header.height;

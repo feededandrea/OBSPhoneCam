@@ -26,12 +26,12 @@ final class MacHubModel: ObservableObject {
     private var obsReconnectAttempt = 0
     private var isConnectingOBS = false
     private let obsReconnectPolicy = ReconnectPolicy(baseDelay: 1, maxDelay: 8, jitter: 0.5)
-    private let obsFastPreviewIntervalNs: UInt64 = 200_000_000
-    private let obsStatusRefreshInterval: TimeInterval = 0.9
-    private let obsSceneListRefreshInterval: TimeInterval = 2.0
-    private let obsScenePreviewRefreshInterval: TimeInterval = 0.9
+    private let obsFastPreviewIntervalNs: UInt64 = 330_000_000
+    private let obsStatusRefreshInterval: TimeInterval = 1.2
+    private let obsSceneListRefreshInterval: TimeInterval = 4.0
+    private let obsScenePreviewRefreshInterval: TimeInterval = 2.5
     private let obsScenePreviewBatchSize = 1
-    private let obsOutputPreviewRefreshInterval: TimeInterval = 0.33
+    private let obsOutputPreviewRefreshInterval: TimeInterval = 0.5
     private var cachedOBSScenes: [OBSScene] = []
     private var cachedAudioMeters: [OBSAudioMeter] = []
     private var lastOutputPreviewData: Data?

@@ -62,7 +62,18 @@ final class OBSWebSocketClient: ObservableObject {
     }
 
     private static func isNoisyRequest(_ requestType: String) -> Bool {
-        requestType == "GetSourceScreenshot" || requestType == "GetInputVolumeMeters"
+        switch requestType {
+        case "GetSourceScreenshot",
+             "GetInputVolumeMeters",
+             "GetCurrentProgramScene",
+             "GetRecordStatus",
+             "GetStreamStatus",
+             "GetReplayBufferStatus",
+             "GetSceneList":
+            return true
+        default:
+            return false
+        }
     }
 
     func refreshStatus() async throws -> OBSStatus {
