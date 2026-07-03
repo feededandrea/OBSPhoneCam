@@ -26,11 +26,12 @@ final class MacHubModel: ObservableObject {
     private var obsReconnectAttempt = 0
     private var isConnectingOBS = false
     private let obsReconnectPolicy = ReconnectPolicy(baseDelay: 1, maxDelay: 8, jitter: 0.5)
-    private let obsFastPreviewIntervalNs: UInt64 = 125_000_000
+    private let obsFastPreviewIntervalNs: UInt64 = 200_000_000
     private let obsStatusRefreshInterval: TimeInterval = 0.9
     private let obsSceneListRefreshInterval: TimeInterval = 2.0
-    private let obsScenePreviewRefreshInterval: TimeInterval = 0.35
-    private let obsScenePreviewBatchSize = 2
+    private let obsScenePreviewRefreshInterval: TimeInterval = 0.9
+    private let obsScenePreviewBatchSize = 1
+    private let obsOutputPreviewRefreshInterval: TimeInterval = 0.33
     private var cachedOBSScenes: [OBSScene] = []
     private var cachedAudioMeters: [OBSAudioMeter] = []
     private var lastOutputPreviewData: Data?
@@ -38,6 +39,7 @@ final class MacHubModel: ObservableObject {
     private var lastSceneListRefresh = Date.distantPast
     private var scenePreviewCache: [String: Data] = [:]
     private var lastScenePreviewRefresh = Date.distantPast
+    private var lastOutputPreviewRefresh = Date.distantPast
     private var lastAudioMeterBroadcast = Date.distantPast
     private var lastAudioMeterPoll = Date.distantPast
     private var scenePreviewRefreshIndex = 0
@@ -306,14 +308,17 @@ final class MacHubModel: ObservableObject {
                 scenes = scenesWithCachedPreviewImages()
             }
 
-            if let sceneName = obsStatus.currentScene {
-                previewData = try? await obsClient.takeSourceScreenshot(sourceName: sceneName, width: 320, height: 180, compressionQuality: 55)
-            }
-            if previewData == nil {
-                previewData = try? await obsClient.takeSourceScreenshot(sourceName: "OBS Phone Cam", width: 320, height: 180, compressionQuality: 55)
-            }
-            if let previewData {
-                lastOutputPreviewData = previewData
+            if now.timeIntervalSince(lastOutputPreviewRefresh) >= obsOutputPreviewRefreshInterval {
+                if let sceneName = obsStatus.currentScene {
+                    previewData = try? await obsClient.takeSourceScreenshot(sourceName: sceneName, width: 320, height: 180, compressionQuality: 55)
+                }
+                if previewData == nil {
+                    previewData = try? await obsClient.takeSourceScreenshot(sourceName: "OBS Phone Cam", width: 320, height: 180, compressionQuality: 55)
+                }
+                if let previewData {
+                    lastOutputPreviewData = previewData
+                    lastOutputPreviewRefresh = now
+                }
             }
         } catch {
             obsStatus = OBSStatus(

@@ -13,6 +13,11 @@ final class DeviceDiscoveryService: ObservableObject {
 
     init(manager: ConnectedDeviceManager) {
         self.manager = manager
+        self.manager.onForceReconnectConnection = { [weak self] connectionID in
+            Task { @MainActor in
+                self?.close(connectionID: connectionID, reason: "zero-FPS watchdog")
+            }
+        }
     }
 
     func start(port: UInt16 = 7777) throws {
@@ -77,6 +82,7 @@ final class DeviceDiscoveryService: ObservableObject {
     }
 
     private func receiveNext(on connection: NWConnection, connectionID: UUID) {
+        let manager = manager
         connection.receive(minimumIncompleteLength: 4, maximumLength: 4) { [weak self] lengthData, _, _, error in
             guard let self else { return }
             if let error {
@@ -99,17 +105,56 @@ final class DeviceDiscoveryService: ObservableObject {
                     Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
                     return
                 }
+                Self.decodeAndIngest(payloadData, connectionID: connectionID, manager: manager)
                 Task { @MainActor in
-                    do {
-                        let envelope = try self.codec.decode(PhoneCamEnvelope.self, from: payloadData)
-                        await self.manager.ingest(envelope, from: connectionID)
-                    } catch {
-                        AppLogger.shared.log(.error, .transport, "Decode failed: \(error.localizedDescription)")
-                    }
                     self.receiveNext(on: connection, connectionID: connectionID)
                 }
             }
         }
+    }
+
+    private nonisolated static func decodeAndIngest(_ payloadData: Data, connectionID: UUID, manager: ConnectedDeviceManager) {
+        let codec = MessageCodec()
+        Task.detached(priority: .userInitiated) { [weak manager] in
+            guard let manager else { return }
+            do {
+                let envelope = try codec.decode(PhoneCamEnvelope.self, from: payloadData)
+                switch envelope.type {
+                case .handshake:
+                    let packet = try codec.payload(HandshakePacket.self, from: envelope)
+                    await MainActor.run {
+                        manager.ingestHandshake(packet)
+                    }
+                case .heartbeat:
+                    let packet = try codec.payload(HeartbeatPacket.self, from: envelope)
+                    await MainActor.run {
+                        manager.ingestHeartbeat(packet, from: connectionID)
+                    }
+                case .control:
+                    let packet = try codec.payload(ControlPacket.self, from: envelope)
+                    await MainActor.run {
+                        manager.ingestControl(packet, deviceID: envelope.deviceID)
+                    }
+                case .streamPacket:
+                    let packet = try codec.payload(StreamPacket.self, from: envelope)
+                    await MainActor.run {
+                        manager.ingestStreamPacket(packet)
+                    }
+                default:
+                    break
+                }
+            } catch {
+                await MainActor.run {
+                    AppLogger.shared.log(.error, .transport, "Decode failed: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    private func close(connectionID: UUID, reason: String) {
+        AppLogger.shared.log(.warning, .reconnect, "Closing device connection because \(reason)")
+        connections[connectionID]?.cancel()
+        connections.removeValue(forKey: connectionID)
     }
 
     private func sendOBSState(_ packet: OBSStatePacket, to connectionID: UUID) {

@@ -24,7 +24,12 @@ final class OBSNativeFramePublisher {
     private let queue = DispatchQueue(label: "com.dinesys.obsphonecam.native-frame-publisher", qos: .userInitiated)
     private let outputURL = URL(fileURLWithPath: "/tmp/obsphonecam-framebuffer.bin")
     private let colorSpace = CGColorSpaceCreateDeviceRGB()
+    private let ciContext = CIContext()
+    private let stateLock = NSLock()
     private var latestSequence: UInt64 = 0
+    private var isPublishingPixelBuffer = false
+    private var pendingPixelBuffer: CVPixelBuffer?
+    private var pendingPixelBufferSequence: UInt64 = 0
 
     func publishJPEGFrame(_ data: Data, sequence: UInt64) {
         queue.async { [weak self] in
@@ -33,13 +38,65 @@ final class OBSNativeFramePublisher {
     }
 
     func publishPixelBuffer(_ pixelBuffer: CVPixelBuffer, sequence: UInt64) {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        guard sequence > latestSequence else { return }
+
+        if isPublishingPixelBuffer {
+            guard sequence > pendingPixelBufferSequence else { return }
+            pendingPixelBuffer = pixelBuffer
+            pendingPixelBufferSequence = sequence
+            return
+        }
+
+        isPublishingPixelBuffer = true
         queue.async { [weak self] in
-            self?.publish(pixelBuffer, sequence: sequence)
+            self?.publishAndDrain(pixelBuffer, sequence: sequence)
         }
     }
 
+    private func publishAndDrain(_ pixelBuffer: CVPixelBuffer, sequence: UInt64) {
+        var nextPixelBuffer: CVPixelBuffer? = pixelBuffer
+        var nextSequence = sequence
+
+        while let currentPixelBuffer = nextPixelBuffer {
+            publish(currentPixelBuffer, sequence: nextSequence)
+
+            stateLock.lock()
+            if let pending = pendingPixelBuffer {
+                nextPixelBuffer = pending
+                nextSequence = pendingPixelBufferSequence
+                pendingPixelBuffer = nil
+                pendingPixelBufferSequence = 0
+                stateLock.unlock()
+            } else {
+                isPublishingPixelBuffer = false
+                stateLock.unlock()
+                nextPixelBuffer = nil
+            }
+        }
+    }
+
+    private func shouldPublish(sequence: UInt64) -> Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return sequence > latestSequence
+    }
+
+    private func markPublished(sequence: UInt64) {
+        stateLock.lock()
+        if sequence > latestSequence {
+            latestSequence = sequence
+        }
+        if sequence >= pendingPixelBufferSequence {
+            pendingPixelBuffer = nil
+            pendingPixelBufferSequence = 0
+        }
+        stateLock.unlock()
+    }
+
     private func publish(_ data: Data, sequence: UInt64) {
-        guard sequence > latestSequence else { return }
+        guard shouldPublish(sequence: sequence) else { return }
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil),
               let image = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
             return
@@ -96,7 +153,7 @@ final class OBSNativeFramePublisher {
             } else {
                 try FileManager.default.moveItem(at: temporaryURL, to: outputURL)
             }
-            latestSequence = sequence
+            markPublished(sequence: sequence)
         } catch {
             try? FileManager.default.removeItem(at: temporaryURL)
             Task { @MainActor in
@@ -106,7 +163,7 @@ final class OBSNativeFramePublisher {
     }
 
     private func publish(_ pixelBuffer: CVPixelBuffer, sequence: UInt64) {
-        guard sequence > latestSequence else { return }
+        guard shouldPublish(sequence: sequence) else { return }
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
         guard width > 0, height > 0 else { return }
@@ -131,7 +188,6 @@ final class OBSNativeFramePublisher {
             }
 
             let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-            let ciContext = CIContext()
             guard let image = ciContext.createCGImage(ciImage, from: ciImage.extent) else { return false }
             context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
             return true
@@ -165,7 +221,7 @@ final class OBSNativeFramePublisher {
             } else {
                 try FileManager.default.moveItem(at: temporaryURL, to: outputURL)
             }
-            latestSequence = sequence
+            markPublished(sequence: sequence)
         } catch {
             try? FileManager.default.removeItem(at: temporaryURL)
             Task { @MainActor in

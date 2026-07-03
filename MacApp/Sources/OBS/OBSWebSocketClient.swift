@@ -53,12 +53,16 @@ final class OBSWebSocketClient: ObservableObject {
                     if let error {
                         self?.pendingRequests.removeValue(forKey: request.d.requestId)
                         continuation.resume(throwing: OBSWebSocketError.requestFailed(error.localizedDescription))
-                    } else {
+                    } else if !Self.isNoisyRequest(requestType) {
                         AppLogger.shared.log(.debug, .obs, "OBS request sent: \(requestType)")
                     }
                 }
             }
         }.responseData
+    }
+
+    private static func isNoisyRequest(_ requestType: String) -> Bool {
+        requestType == "GetSourceScreenshot" || requestType == "GetInputVolumeMeters"
     }
 
     func refreshStatus() async throws -> OBSStatus {
