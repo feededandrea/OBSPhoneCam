@@ -1,0 +1,27 @@
+.DS_Store
+
+# Xcode local/user state
+*.xcuserstate
+xcuserdata/
+*.moved-aside
+DerivedData/
+DerivedData-*/
+build/
+
+# SwiftPM / generated dependency caches
+.build/
+.swiftpm/
+
+# OBS plugin generated output
+OBSPlugin/build/
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Archives and packaged builds
+*.xcarchive
+*.ipa
+*.dSYM
+*.dSYM.zip

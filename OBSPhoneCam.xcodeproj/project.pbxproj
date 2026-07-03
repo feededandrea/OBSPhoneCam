@@ -1,0 +1,1010 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0084C91F58A24F364620A996 /* OBSPhoneCamProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B528C2D95C182FA51486EB /* OBSPhoneCamProvider.swift */; };
+		0266AF17C37826906115AA24 /* Packetizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731DAC0709601B5B00F0E6FC /* Packetizer.swift */; };
+		0AE7E6FE274D47DAD27AB96F /* OBSBrowserSourceServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578DB66DBB1C2DE12E82748D /* OBSBrowserSourceServer.swift */; };
+		0BC458ABD4BBBA5861599A72 /* FrameBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C515D1B997973F36CEFEEBAE /* FrameBuffer.swift */; };
+		0D42B12F3CCFF01AE347512E /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB21E2B3601E251F7F3B784 /* DashboardView.swift */; };
+		101A9274B3C1E7149389E218 /* ClipLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A99EF434A12B81FEC1E187 /* ClipLibraryView.swift */; };
+		124CB7F4BC4ED545848634EC /* ClipTrimmerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C89BE83D4F4E6295029107 /* ClipTrimmerService.swift */; };
+		15370D4F3B18F861CCEAC9EE /* StreamModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32336AC68EB04F8914E281AF /* StreamModels.swift */; };
+		156F74D9062CA2CCE56D294F /* DeviceDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672AA692E3D45020F4482ABE /* DeviceDiscoveryService.swift */; };
+		15E9C07F7F15F437B2D6C28B /* OBSClipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E8135DCC06DF2EA60789A8 /* OBSClipManager.swift */; };
+		1803EC2BCBEF2F037E614D44 /* MessageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA82FC893FF3FC9853212410 /* MessageCodec.swift */; };
+		19CE91B7EF979A9A705D383D /* AudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1A6B6A4F9E4F556B2C52C /* AudioCaptureManager.swift */; };
+		1B735BB0FB0BACFF6C47B8FE /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB50FAFC33394F500911FCE /* CameraView.swift */; };
+		20FA72A2C7360EC730A9A96F /* StreamModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32336AC68EB04F8914E281AF /* StreamModels.swift */; };
+		21E1360CE0230C276F8CD01E /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7613E50ABF3F24AA8CFE551A /* Errors.swift */; };
+		23E4E67D370EA8D966741A78 /* ReconnectPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E734524B16B90678AF35E1D /* ReconnectPolicyTests.swift */; };
+		2AC4C0081B499730C74D834E /* ReconnectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA965B46BDA09DDCE0EA37CB /* ReconnectManager.swift */; };
+		31A66723EE2EA20184D1D003 /* DeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EBF53D601226340532EF87 /* DeviceIdentity.swift */; };
+		3705E6A309D57F378826ECB0 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC229B4A228331360BB319 /* Messages.swift */; };
+		3850B94B74EF03BE4E18F2DC /* AudioReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A9E1B0143B03AE3EACB5E2 /* AudioReceiver.swift */; };
+		423CEA3C554AF41FBE222CBE /* DeviceStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD2B59BB15CC337A5A0BFD5 /* DeviceStatusView.swift */; };
+		48E55D88DD35D2CFE019FEF1 /* DevicePreviewFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4035CCC9A0DDC60EE78F90C0 /* DevicePreviewFrame.swift */; };
+		4AB967706395FB3071F47D03 /* OBSSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E099CA38A91E8CB0F16FD324 /* OBSSceneManager.swift */; };
+		4EC59AB9E5619CD4DA25CB0B /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A76132DE6257BFC1F5BF0 /* AppLogger.swift */; };
+		5137A6BB4376484D748B2FC9 /* DeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EBF53D601226340532EF87 /* DeviceIdentity.swift */; };
+		517F52E4C1FC251304014FF7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3264899011C6559F5FB5FB /* main.swift */; };
+		55F218F47FE88C45B14A45A7 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7613E50ABF3F24AA8CFE551A /* Errors.swift */; };
+		582397B88601C320BD179CA6 /* OBSNativeFramePublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B542678B8E4971860E2FF71 /* OBSNativeFramePublisher.swift */; };
+		5AD0F787118D1E6CA90DA99B /* VirtualCameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994BEC3E7A5A96A48FA81753 /* VirtualCameraManager.swift */; };
+		5B1D73340511F8B62C8BB798 /* SceneMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCBB8B5575C8C38736742249 /* SceneMappingView.swift */; };
+		5B95D95951AB92F75C811C43 /* OBSControlPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954528554F8B1795D44C4A9D /* OBSControlPanelView.swift */; };
+		637429F43F85AA734B3BB9E3 /* MessageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA82FC893FF3FC9853212410 /* MessageCodec.swift */; };
+		66C0729DF49787D69085B7E8 /* OBSModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877AB5CFAC19933203BF0C9 /* OBSModels.swift */; };
+		68B11DED68464FFC0FCA2939 /* InstagramAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E01CE77A4501F37135DC112 /* InstagramAuthManager.swift */; };
+		6952ABD18436B5A1B812E90C /* IOSAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C0A411904A5EFBE2745411 /* IOSAppModel.swift */; };
+		72FF77F9B6186C2499A15CCE /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9288230BB69CE252654C0C86 /* ReconnectPolicy.swift */; };
+		79F6E7A5D1048D48567D5B34 /* OBSConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0B46FC11A552E9158400CB /* OBSConnectionView.swift */; };
+		821C500A39FE667AAF2729FB /* OBSModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877AB5CFAC19933203BF0C9 /* OBSModels.swift */; };
+		8358AEC235B6E076E1B66B4C /* USBPreferredTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F3D3D0022246C0A6BB5CDF /* USBPreferredTransport.swift */; };
+		84A85ADA902E517C3A6A3FD6 /* MessageCodecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB924A4077CC1EBBA9F0DCE /* MessageCodecTests.swift */; };
+		864EE41C7590F9F6AB6418C1 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7613E50ABF3F24AA8CFE551A /* Errors.swift */; };
+		88919D36370CB08D853295B2 /* OBSCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A5C433F923D16C4160A1E9 /* OBSCommands.swift */; };
+		8C8EFB85D9FEAFB725386EA4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7284D70AD06937914CC8065C /* HomeView.swift */; };
+		8E24E2031EDE49D279BB7CFB /* DeviceStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFA5B02528DE351BD3207B /* DeviceStateMachineTests.swift */; };
+		93F86939DC2A5F51F445925C /* MacHubDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A1CD82728A884A9944DB47 /* MacHubDiscoveryService.swift */; };
+		9440ECDA35509E81BBC09710 /* CameraExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC0F8389779EECE4B2A795B /* CameraExtensionBridge.swift */; };
+		99F54A6B1D8901AF3D30C08E /* OBSPhoneCamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FA845B996CDFB775FBB621 /* OBSPhoneCamApp.swift */; };
+		9C6D75E308C54C3AE4B8E383 /* OBSClipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E8135DCC06DF2EA60789A8 /* OBSClipManager.swift */; };
+		9EAF25ECD6BB2056DD626A43 /* NetworkStreamTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE98FB1B22558EF73B958D06 /* NetworkStreamTransport.swift */; };
+		9F349C8A02124BC6FC5F68A0 /* OBSSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E099CA38A91E8CB0F16FD324 /* OBSSceneManager.swift */; };
+		A47A52EE6D185348215C75E2 /* ConnectedDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE41935F3192C14A5952976 /* ConnectedDeviceManager.swift */; };
+		A84F8688DD047619B5195DBD /* OBSCameraHubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C01289FF48CAD563BEE9C90 /* OBSCameraHubApp.swift */; };
+		A9428D9542399DAD289A6711 /* OBSNativeFramePublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B542678B8E4971860E2FF71 /* OBSNativeFramePublisher.swift */; };
+		A9C14335CECBC02E10659183 /* DevicePreviewFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4035CCC9A0DDC60EE78F90C0 /* DevicePreviewFrame.swift */; };
+		ACCEFF14B3D44C4FB20791DC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303CB762556C558C5B251480 /* SettingsView.swift */; };
+		B054A4AFEBA5C93B2BAEA6A7 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509CEA41DB88A0296E64242B /* ConnectionState.swift */; };
+		B07ABE215AD959B110698EF8 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509CEA41DB88A0296E64242B /* ConnectionState.swift */; };
+		B20FBC496C17C775AC3CBFC9 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75918E00F77004ACD36F0C6 /* LogsView.swift */; };
+		B35E11B9D0A27247DF7055D1 /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9288230BB69CE252654C0C86 /* ReconnectPolicy.swift */; };
+		B3AFC0167C2EB4F642096806 /* DeviceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D9DD34489C3434F3A345D9 /* DeviceSession.swift */; };
+		B4BF12FCFDD60D39F112AE08 /* ClipTrimmerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C89BE83D4F4E6295029107 /* ClipTrimmerService.swift */; };
+		B5FA5891538144FC90F858DD /* StreamTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A97855AB3CB912B76C4E1B /* StreamTransport.swift */; };
+		B93B009F2869925A15CE29FF /* MacHubModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FDAAABBFA1E35DD4FF15B5 /* MacHubModel.swift */; };
+		BC3801B9A1F86EA6D36B8BDC /* MiniPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58EFAA873192220D2E7E206 /* MiniPreviewView.swift */; };
+		BD6EC206E6E878C8076F5B91 /* ConnectedDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE41935F3192C14A5952976 /* ConnectedDeviceManager.swift */; };
+		BDF51CB6145720A68CF81659 /* StreamEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23CB3D6D91D3B2F1C23AC94 /* StreamEncoder.swift */; };
+		BF989B61325EEF5E4B061FA4 /* OBSModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877AB5CFAC19933203BF0C9 /* OBSModels.swift */; };
+		C20716679DD7AA1A4381E06B /* DeviceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B586FC46493566F70C655FA /* DeviceDetailView.swift */; };
+		C24CA3F34D24DC0127715363 /* DeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EBF53D601226340532EF87 /* DeviceIdentity.swift */; };
+		C2CBDA20AA9A4AF774C46B96 /* OBSBrowserSourceServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578DB66DBB1C2DE12E82748D /* OBSBrowserSourceServer.swift */; };
+		C799010659030FBC8A7013FD /* OBSPreviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971D27F546A64E87DE6FAC7D /* OBSPreviewService.swift */; };
+		C7E88DE6F8573DBE7B5309E8 /* ClipControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BD2606631D13087DBAC1BF /* ClipControlsView.swift */; };
+		C9660BC107778B53DAA05AD1 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509CEA41DB88A0296E64242B /* ConnectionState.swift */; };
+		C968457091FF25683B6C9DE7 /* OBSStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2D1D9B068A11C75E1CC5BD /* OBSStateStore.swift */; };
+		CA29358DF591992A10DC6012 /* OBSPreviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971D27F546A64E87DE6FAC7D /* OBSPreviewService.swift */; };
+		CA433DDB1693A4ACF504C243 /* OBSWebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5092BB2FD4C48520984223F3 /* OBSWebSocketClient.swift */; };
+		CC6976592C7A1B3CA1173AA5 /* OBSWebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5092BB2FD4C48520984223F3 /* OBSWebSocketClient.swift */; };
+		CED7523F59A081B5E4327A5A /* InstagramUploadModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA7DE0B00C80C094EE143A2 /* InstagramUploadModels.swift */; };
+		D29BD6E28022B8CDC9DDDCC5 /* OBSRemoteClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FFA610EF05E9C76F3C360 /* OBSRemoteClient.swift */; };
+		D524DA11AA1B26AB901EEA40 /* SampleBufferProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234163E231424F2298D2D2A1 /* SampleBufferProvider.swift */; };
+		D762E3192060FCC3553320A5 /* ReconnectPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9288230BB69CE252654C0C86 /* ReconnectPolicy.swift */; };
+		D7AF6B61512781CD8C75F32D /* InstagramPublishingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC29D5F06803E07B857E579E /* InstagramPublishingService.swift */; };
+		D835E3A02661F8FB747A187F /* StreamReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3BEC0CA44FFD8CA0AF6102 /* StreamReceiver.swift */; };
+		DA582499ED86A92F407C227F /* MessageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA82FC893FF3FC9853212410 /* MessageCodec.swift */; };
+		DAC21B4D6DC6740E3893B1F4 /* OBSRequestEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780E93104927FECB92B2C41C /* OBSRequestEncodingTests.swift */; };
+		DAF9F26B178D787983E945AE /* CameraCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60B693DED00D35CDCB32B35 /* CameraCaptureManager.swift */; };
+		DD15EE2D82FDDF380053FECD /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9052557B419196AF6179A16 /* CameraSettings.swift */; };
+		DFC3040F0ED0BC69615DDDE3 /* VirtualCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542149B6DF47A9514D7B7D7 /* VirtualCameraView.swift */; };
+		E3D6BBC7D7FD3CBAA31B32FB /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BB5A12F6B6D240E907D066 /* CameraPreviewView.swift */; };
+		E42C8ED8B4FED393A5C87AED /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1F6DA7527917CE83B9E807 /* DeviceListView.swift */; };
+		E56B43092539CF7E89D13982 /* DeviceDiscoveryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 672AA692E3D45020F4482ABE /* DeviceDiscoveryService.swift */; };
+		ED433E6225398B6A45A0883B /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC229B4A228331360BB319 /* Messages.swift */; };
+		EF1C5FF387B476D028B73575 /* StreamDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F942BB7DF5D65E5E9BAA90 /* StreamDecoder.swift */; };
+		EF3892B5B11E7A1E4DC8569F /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC229B4A228331360BB319 /* Messages.swift */; };
+		EFB0750996A64451375AA960 /* SceneSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC78C9F25025EC93C0B00C0C /* SceneSwitcherView.swift */; };
+		F1C0F175E42A65DDD88C16CB /* DeviceSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D9DD34489C3434F3A345D9 /* DeviceSession.swift */; };
+		F2710A9F0293716D4A6A7627 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A76132DE6257BFC1F5BF0 /* AppLogger.swift */; };
+		FB0CE5B68D40E4A9EC685934 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783A76132DE6257BFC1F5BF0 /* AppLogger.swift */; };
+		FC91AE6B201B27F51396CEE5 /* StreamModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32336AC68EB04F8914E281AF /* StreamModels.swift */; };
+		FE2D30A464C6C4994AA3CDE1 /* PreviewFrameStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C9C965902B96CBF64FDCEA /* PreviewFrameStreamer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		07B528C2D95C182FA51486EB /* OBSPhoneCamProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSPhoneCamProvider.swift; sourceTree = "<group>"; };
+		0E734524B16B90678AF35E1D /* ReconnectPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectPolicyTests.swift; sourceTree = "<group>"; };
+		140FFA610EF05E9C76F3C360 /* OBSRemoteClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSRemoteClient.swift; sourceTree = "<group>"; };
+		234163E231424F2298D2D2A1 /* SampleBufferProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleBufferProvider.swift; sourceTree = "<group>"; };
+		2877AB5CFAC19933203BF0C9 /* OBSModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSModels.swift; sourceTree = "<group>"; };
+		2AB1A6B6A4F9E4F556B2C52C /* AudioCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureManager.swift; sourceTree = "<group>"; };
+		2FB21E2B3601E251F7F3B784 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		303CB762556C558C5B251480 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		32336AC68EB04F8914E281AF /* StreamModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamModels.swift; sourceTree = "<group>"; };
+		33FC229B4A228331360BB319 /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
+		3767951CC1FDD330C241B062 /* OBSPhoneCam iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "OBSPhoneCam iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F2D1D9B068A11C75E1CC5BD /* OBSStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSStateStore.swift; sourceTree = "<group>"; };
+		4035CCC9A0DDC60EE78F90C0 /* DevicePreviewFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePreviewFrame.swift; sourceTree = "<group>"; };
+		44EBF53D601226340532EF87 /* DeviceIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIdentity.swift; sourceTree = "<group>"; };
+		4542149B6DF47A9514D7B7D7 /* VirtualCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCameraView.swift; sourceTree = "<group>"; };
+		45BD2606631D13087DBAC1BF /* ClipControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipControlsView.swift; sourceTree = "<group>"; };
+		4C3264899011C6559F5FB5FB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		5092BB2FD4C48520984223F3 /* OBSWebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSWebSocketClient.swift; sourceTree = "<group>"; };
+		509CEA41DB88A0296E64242B /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
+		52A1CD82728A884A9944DB47 /* MacHubDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacHubDiscoveryService.swift; sourceTree = "<group>"; };
+		56D9DD34489C3434F3A345D9 /* DeviceSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSession.swift; sourceTree = "<group>"; };
+		578DB66DBB1C2DE12E82748D /* OBSBrowserSourceServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSBrowserSourceServer.swift; sourceTree = "<group>"; };
+		5A1F6DA7527917CE83B9E807 /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
+		5D0B46FC11A552E9158400CB /* OBSConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSConnectionView.swift; sourceTree = "<group>"; };
+		5DE41935F3192C14A5952976 /* ConnectedDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDeviceManager.swift; sourceTree = "<group>"; };
+		672AA692E3D45020F4482ABE /* DeviceDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDiscoveryService.swift; sourceTree = "<group>"; };
+		69A97855AB3CB912B76C4E1B /* StreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamTransport.swift; sourceTree = "<group>"; };
+		6B542678B8E4971860E2FF71 /* OBSNativeFramePublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSNativeFramePublisher.swift; sourceTree = "<group>"; };
+		6BA7DE0B00C80C094EE143A2 /* InstagramUploadModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramUploadModels.swift; sourceTree = "<group>"; };
+		6C01289FF48CAD563BEE9C90 /* OBSCameraHubApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSCameraHubApp.swift; sourceTree = "<group>"; };
+		6E01CE77A4501F37135DC112 /* InstagramAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramAuthManager.swift; sourceTree = "<group>"; };
+		6E3BEC0CA44FFD8CA0AF6102 /* StreamReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamReceiver.swift; sourceTree = "<group>"; };
+		6FB50FAFC33394F500911FCE /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		70C0A411904A5EFBE2745411 /* IOSAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSAppModel.swift; sourceTree = "<group>"; };
+		7284D70AD06937914CC8065C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		731DAC0709601B5B00F0E6FC /* Packetizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packetizer.swift; sourceTree = "<group>"; };
+		7613E50ABF3F24AA8CFE551A /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		780E93104927FECB92B2C41C /* OBSRequestEncodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSRequestEncodingTests.swift; sourceTree = "<group>"; };
+		783A76132DE6257BFC1F5BF0 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		7EB924A4077CC1EBBA9F0DCE /* MessageCodecTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCodecTests.swift; sourceTree = "<group>"; };
+		7F18DDC10019DF751EE3B3E0 /* OBSCameraHub Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OBSCameraHub Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		88DFA5B02528DE351BD3207B /* DeviceStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStateMachineTests.swift; sourceTree = "<group>"; };
+		9288230BB69CE252654C0C86 /* ReconnectPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectPolicy.swift; sourceTree = "<group>"; };
+		954528554F8B1795D44C4A9D /* OBSControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSControlPanelView.swift; sourceTree = "<group>"; };
+		971D27F546A64E87DE6FAC7D /* OBSPreviewService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSPreviewService.swift; sourceTree = "<group>"; };
+		994BEC3E7A5A96A48FA81753 /* VirtualCameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualCameraManager.swift; sourceTree = "<group>"; };
+		9B586FC46493566F70C655FA /* DeviceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetailView.swift; sourceTree = "<group>"; };
+		A1FA845B996CDFB775FBB621 /* OBSPhoneCamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSPhoneCamApp.swift; sourceTree = "<group>"; };
+		A2A99EF434A12B81FEC1E187 /* ClipLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipLibraryView.swift; sourceTree = "<group>"; };
+		A6E8135DCC06DF2EA60789A8 /* OBSClipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSClipManager.swift; sourceTree = "<group>"; };
+		A7C9C965902B96CBF64FDCEA /* PreviewFrameStreamer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFrameStreamer.swift; sourceTree = "<group>"; };
+		AAD2B59BB15CC337A5A0BFD5 /* DeviceStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatusView.swift; sourceTree = "<group>"; };
+		AB241DC4D64347E8353F60B4 /* OBSCameraExtension.systemextension */ = {isa = PBXFileReference; explicitFileType = "wrapper.system-extension"; includeInIndex = 0; path = OBSCameraExtension.systemextension; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE98FB1B22558EF73B958D06 /* NetworkStreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStreamTransport.swift; sourceTree = "<group>"; };
+		BA82FC893FF3FC9853212410 /* MessageCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCodec.swift; sourceTree = "<group>"; };
+		BA965B46BDA09DDCE0EA37CB /* ReconnectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReconnectManager.swift; sourceTree = "<group>"; };
+		BC29D5F06803E07B857E579E /* InstagramPublishingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramPublishingService.swift; sourceTree = "<group>"; };
+		BCBB8B5575C8C38736742249 /* SceneMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneMappingView.swift; sourceTree = "<group>"; };
+		C515D1B997973F36CEFEEBAE /* FrameBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameBuffer.swift; sourceTree = "<group>"; };
+		C58EFAA873192220D2E7E206 /* MiniPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPreviewView.swift; sourceTree = "<group>"; };
+		C75918E00F77004ACD36F0C6 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
+		C7A5C433F923D16C4160A1E9 /* OBSCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSCommands.swift; sourceTree = "<group>"; };
+		C8A9E1B0143B03AE3EACB5E2 /* AudioReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioReceiver.swift; sourceTree = "<group>"; };
+		CC78C9F25025EC93C0B00C0C /* SceneSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneSwitcherView.swift; sourceTree = "<group>"; };
+		D083BCE95CA064C8E5F59704 /* OBSPhoneCamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OBSPhoneCamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3F942BB7DF5D65E5E9BAA90 /* StreamDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDecoder.swift; sourceTree = "<group>"; };
+		D4BB5A12F6B6D240E907D066 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		D4FDAAABBFA1E35DD4FF15B5 /* MacHubModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacHubModel.swift; sourceTree = "<group>"; };
+		D60B693DED00D35CDCB32B35 /* CameraCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureManager.swift; sourceTree = "<group>"; };
+		D9C89BE83D4F4E6295029107 /* ClipTrimmerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipTrimmerService.swift; sourceTree = "<group>"; };
+		E099CA38A91E8CB0F16FD324 /* OBSSceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBSSceneManager.swift; sourceTree = "<group>"; };
+		E9052557B419196AF6179A16 /* CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
+		EEC0F8389779EECE4B2A795B /* CameraExtensionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraExtensionBridge.swift; sourceTree = "<group>"; };
+		F23CB3D6D91D3B2F1C23AC94 /* StreamEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamEncoder.swift; sourceTree = "<group>"; };
+		F4F3D3D0022246C0A6BB5CDF /* USBPreferredTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBPreferredTransport.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		006CC6191AE8D2A49D016C09 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4C3264899011C6559F5FB5FB /* main.swift */,
+				07B528C2D95C182FA51486EB /* OBSPhoneCamProvider.swift */,
+			);
+			name = Sources;
+			path = CameraExtension/Sources;
+			sourceTree = "<group>";
+		};
+		0F9FFD6357DBBD050FA83FD8 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				6FB50FAFC33394F500911FCE /* CameraView.swift */,
+				45BD2606631D13087DBAC1BF /* ClipControlsView.swift */,
+				AAD2B59BB15CC337A5A0BFD5 /* DeviceStatusView.swift */,
+				7284D70AD06937914CC8065C /* HomeView.swift */,
+				C58EFAA873192220D2E7E206 /* MiniPreviewView.swift */,
+				954528554F8B1795D44C4A9D /* OBSControlPanelView.swift */,
+				CC78C9F25025EC93C0B00C0C /* SceneSwitcherView.swift */,
+				303CB762556C558C5B251480 /* SettingsView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		1E7A4594182B7CD9AD5160FA /* VirtualCamera */ = {
+			isa = PBXGroup;
+			children = (
+				EEC0F8389779EECE4B2A795B /* CameraExtensionBridge.swift */,
+				234163E231424F2298D2D2A1 /* SampleBufferProvider.swift */,
+				994BEC3E7A5A96A48FA81753 /* VirtualCameraManager.swift */,
+			);
+			path = VirtualCamera;
+			sourceTree = "<group>";
+		};
+		2E8E39ACB24CD7FBB30EF216 /* Instagram */ = {
+			isa = PBXGroup;
+			children = (
+				6E01CE77A4501F37135DC112 /* InstagramAuthManager.swift */,
+				BC29D5F06803E07B857E579E /* InstagramPublishingService.swift */,
+				6BA7DE0B00C80C094EE143A2 /* InstagramUploadModels.swift */,
+			);
+			path = Instagram;
+			sourceTree = "<group>";
+		};
+		303C15C90FF495495D444311 /* OBSPhoneCamSharedTests */ = {
+			isa = PBXGroup;
+			children = (
+				88DFA5B02528DE351BD3207B /* DeviceStateMachineTests.swift */,
+				7EB924A4077CC1EBBA9F0DCE /* MessageCodecTests.swift */,
+				780E93104927FECB92B2C41C /* OBSRequestEncodingTests.swift */,
+				0E734524B16B90678AF35E1D /* ReconnectPolicyTests.swift */,
+			);
+			path = OBSPhoneCamSharedTests;
+			sourceTree = "<group>";
+		};
+		364DA1EEA67373A73199FF46 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A2A99EF434A12B81FEC1E187 /* ClipLibraryView.swift */,
+				2FB21E2B3601E251F7F3B784 /* DashboardView.swift */,
+				9B586FC46493566F70C655FA /* DeviceDetailView.swift */,
+				5A1F6DA7527917CE83B9E807 /* DeviceListView.swift */,
+				C75918E00F77004ACD36F0C6 /* LogsView.swift */,
+				5D0B46FC11A552E9158400CB /* OBSConnectionView.swift */,
+				BCBB8B5575C8C38736742249 /* SceneMappingView.swift */,
+				4542149B6DF47A9514D7B7D7 /* VirtualCameraView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		584BEA43CACCE085BEB196CB /* Receiver */ = {
+			isa = PBXGroup;
+			children = (
+				C8A9E1B0143B03AE3EACB5E2 /* AudioReceiver.swift */,
+				C515D1B997973F36CEFEEBAE /* FrameBuffer.swift */,
+				D3F942BB7DF5D65E5E9BAA90 /* StreamDecoder.swift */,
+				6E3BEC0CA44FFD8CA0AF6102 /* StreamReceiver.swift */,
+			);
+			path = Receiver;
+			sourceTree = "<group>";
+		};
+		5A167B1CA52909AD46013825 /* OBSRemote */ = {
+			isa = PBXGroup;
+			children = (
+				C7A5C433F923D16C4160A1E9 /* OBSCommands.swift */,
+				140FFA610EF05E9C76F3C360 /* OBSRemoteClient.swift */,
+				3F2D1D9B068A11C75E1CC5BD /* OBSStateStore.swift */,
+			);
+			path = OBSRemote;
+			sourceTree = "<group>";
+		};
+		60404B0B2634415103F87B70 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				52A1CD82728A884A9944DB47 /* MacHubDiscoveryService.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		6283086AC268D97375B73896 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A1FA845B996CDFB775FBB621 /* OBSPhoneCamApp.swift */,
+				DAD62F04E7D7A85AE3A7AADB /* App */,
+				F5261E51B5FDC3450A59E8B6 /* Camera */,
+				60404B0B2634415103F87B70 /* Networking */,
+				5A167B1CA52909AD46013825 /* OBSRemote */,
+				77066C7FFDE99D732D5B17A3 /* Streaming */,
+				0F9FFD6357DBBD050FA83FD8 /* UI */,
+			);
+			name = Sources;
+			path = iOSApp/Sources;
+			sourceTree = "<group>";
+		};
+		6F795F307A3F007CE0A7996C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AB241DC4D64347E8353F60B4 /* OBSCameraExtension.systemextension */,
+				7F18DDC10019DF751EE3B3E0 /* OBSCameraHub Mac.app */,
+				3767951CC1FDD330C241B062 /* OBSPhoneCam iOS.app */,
+				D083BCE95CA064C8E5F59704 /* OBSPhoneCamTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77066C7FFDE99D732D5B17A3 /* Streaming */ = {
+			isa = PBXGroup;
+			children = (
+				AE98FB1B22558EF73B958D06 /* NetworkStreamTransport.swift */,
+				731DAC0709601B5B00F0E6FC /* Packetizer.swift */,
+				A7C9C965902B96CBF64FDCEA /* PreviewFrameStreamer.swift */,
+				BA965B46BDA09DDCE0EA37CB /* ReconnectManager.swift */,
+				F23CB3D6D91D3B2F1C23AC94 /* StreamEncoder.swift */,
+				69A97855AB3CB912B76C4E1B /* StreamTransport.swift */,
+				F4F3D3D0022246C0A6BB5CDF /* USBPreferredTransport.swift */,
+			);
+			path = Streaming;
+			sourceTree = "<group>";
+		};
+		7BF08F97E3909130D7A0B337 = {
+			isa = PBXGroup;
+			children = (
+				006CC6191AE8D2A49D016C09 /* Sources */,
+				6283086AC268D97375B73896 /* Sources */,
+				919F096327FF126E43772696 /* Sources */,
+				C017F146614E162A4CD5D9D7 /* Sources */,
+				BD1DB94A63DD61D292982B62 /* Tests */,
+				6F795F307A3F007CE0A7996C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		919F096327FF126E43772696 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6C01289FF48CAD563BEE9C90 /* OBSCameraHubApp.swift */,
+				C3CA4BDB7E03724C7333E454 /* App */,
+				A8226B7F1F1A3772E763D4AE /* DeviceManager */,
+				2E8E39ACB24CD7FBB30EF216 /* Instagram */,
+				B541594202DB9D58F9F9AF1C /* OBS */,
+				584BEA43CACCE085BEB196CB /* Receiver */,
+				364DA1EEA67373A73199FF46 /* UI */,
+				1E7A4594182B7CD9AD5160FA /* VirtualCamera */,
+			);
+			name = Sources;
+			path = MacApp/Sources;
+			sourceTree = "<group>";
+		};
+		A8226B7F1F1A3772E763D4AE /* DeviceManager */ = {
+			isa = PBXGroup;
+			children = (
+				5DE41935F3192C14A5952976 /* ConnectedDeviceManager.swift */,
+				672AA692E3D45020F4482ABE /* DeviceDiscoveryService.swift */,
+				4035CCC9A0DDC60EE78F90C0 /* DevicePreviewFrame.swift */,
+				56D9DD34489C3434F3A345D9 /* DeviceSession.swift */,
+			);
+			path = DeviceManager;
+			sourceTree = "<group>";
+		};
+		B541594202DB9D58F9F9AF1C /* OBS */ = {
+			isa = PBXGroup;
+			children = (
+				D9C89BE83D4F4E6295029107 /* ClipTrimmerService.swift */,
+				578DB66DBB1C2DE12E82748D /* OBSBrowserSourceServer.swift */,
+				A6E8135DCC06DF2EA60789A8 /* OBSClipManager.swift */,
+				6B542678B8E4971860E2FF71 /* OBSNativeFramePublisher.swift */,
+				971D27F546A64E87DE6FAC7D /* OBSPreviewService.swift */,
+				E099CA38A91E8CB0F16FD324 /* OBSSceneManager.swift */,
+				5092BB2FD4C48520984223F3 /* OBSWebSocketClient.swift */,
+			);
+			path = OBS;
+			sourceTree = "<group>";
+		};
+		BD1DB94A63DD61D292982B62 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				303C15C90FF495495D444311 /* OBSPhoneCamSharedTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		C017F146614E162A4CD5D9D7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F0260ADB5ED9B64EA686802A /* OBSPhoneCamShared */,
+			);
+			name = Sources;
+			path = Shared/Sources;
+			sourceTree = "<group>";
+		};
+		C3CA4BDB7E03724C7333E454 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D4FDAAABBFA1E35DD4FF15B5 /* MacHubModel.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DAD62F04E7D7A85AE3A7AADB /* App */ = {
+			isa = PBXGroup;
+			children = (
+				70C0A411904A5EFBE2745411 /* IOSAppModel.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F0260ADB5ED9B64EA686802A /* OBSPhoneCamShared */ = {
+			isa = PBXGroup;
+			children = (
+				783A76132DE6257BFC1F5BF0 /* AppLogger.swift */,
+				509CEA41DB88A0296E64242B /* ConnectionState.swift */,
+				44EBF53D601226340532EF87 /* DeviceIdentity.swift */,
+				7613E50ABF3F24AA8CFE551A /* Errors.swift */,
+				BA82FC893FF3FC9853212410 /* MessageCodec.swift */,
+				33FC229B4A228331360BB319 /* Messages.swift */,
+				2877AB5CFAC19933203BF0C9 /* OBSModels.swift */,
+				9288230BB69CE252654C0C86 /* ReconnectPolicy.swift */,
+				32336AC68EB04F8914E281AF /* StreamModels.swift */,
+			);
+			path = OBSPhoneCamShared;
+			sourceTree = "<group>";
+		};
+		F5261E51B5FDC3450A59E8B6 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				2AB1A6B6A4F9E4F556B2C52C /* AudioCaptureManager.swift */,
+				D60B693DED00D35CDCB32B35 /* CameraCaptureManager.swift */,
+				D4BB5A12F6B6D240E907D066 /* CameraPreviewView.swift */,
+				E9052557B419196AF6179A16 /* CameraSettings.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		19CAFFD8B58B973096DBF03D /* OBSPhoneCamTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C66508413283222AA1B06155 /* Build configuration list for PBXNativeTarget "OBSPhoneCamTests" */;
+			buildPhases = (
+				8AE9A01CAB3915A73F232B81 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OBSPhoneCamTests;
+			packageProductDependencies = (
+			);
+			productName = OBSPhoneCamTests;
+			productReference = D083BCE95CA064C8E5F59704 /* OBSPhoneCamTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1A64C26820EEC6DC6F102D8F /* OBSPhoneCam iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4477DCB181407ABAEFAD780A /* Build configuration list for PBXNativeTarget "OBSPhoneCam iOS" */;
+			buildPhases = (
+				992551F64F2FA2FDC0D539C8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OBSPhoneCam iOS";
+			packageProductDependencies = (
+			);
+			productName = "OBSPhoneCam iOS";
+			productReference = 3767951CC1FDD330C241B062 /* OBSPhoneCam iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4C2EF6AF228180F643D70693 /* OBSCameraHub Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F2B36EAA9D33A1E2C6FD29E /* Build configuration list for PBXNativeTarget "OBSCameraHub Mac" */;
+			buildPhases = (
+				4122CF35A4E12F52C132EC5B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OBSCameraHub Mac";
+			packageProductDependencies = (
+			);
+			productName = "OBSCameraHub Mac";
+			productReference = 7F18DDC10019DF751EE3B3E0 /* OBSCameraHub Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CB299A3869480EED5121D046 /* OBSCameraExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 311D6B1A6D6BE999B2C83A1A /* Build configuration list for PBXNativeTarget "OBSCameraExtension" */;
+			buildPhases = (
+				F6EF82357C897C4023307637 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OBSCameraExtension;
+			packageProductDependencies = (
+			);
+			productName = OBSCameraExtension;
+			productReference = AB241DC4D64347E8353F60B4 /* OBSCameraExtension.systemextension */;
+			productType = "com.apple.product-type.system-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		19F272468BB6D7C98D7CFF44 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					19CAFFD8B58B973096DBF03D = {
+						DevelopmentTeam = LBZ3286XZ7;
+						ProvisioningStyle = Automatic;
+					};
+					1A64C26820EEC6DC6F102D8F = {
+						DevelopmentTeam = LBZ3286XZ7;
+						ProvisioningStyle = Automatic;
+					};
+					4C2EF6AF228180F643D70693 = {
+						DevelopmentTeam = LBZ3286XZ7;
+						ProvisioningStyle = Automatic;
+					};
+					CB299A3869480EED5121D046 = {
+						DevelopmentTeam = LBZ3286XZ7;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5FF2FB316C9971727069B112 /* Build configuration list for PBXProject "OBSPhoneCam" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7BF08F97E3909130D7A0B337;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 6F795F307A3F007CE0A7996C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CB299A3869480EED5121D046 /* OBSCameraExtension */,
+				4C2EF6AF228180F643D70693 /* OBSCameraHub Mac */,
+				1A64C26820EEC6DC6F102D8F /* OBSPhoneCam iOS */,
+				19CAFFD8B58B973096DBF03D /* OBSPhoneCamTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4122CF35A4E12F52C132EC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2710A9F0293716D4A6A7627 /* AppLogger.swift in Sources */,
+				3850B94B74EF03BE4E18F2DC /* AudioReceiver.swift in Sources */,
+				9440ECDA35509E81BBC09710 /* CameraExtensionBridge.swift in Sources */,
+				101A9274B3C1E7149389E218 /* ClipLibraryView.swift in Sources */,
+				B4BF12FCFDD60D39F112AE08 /* ClipTrimmerService.swift in Sources */,
+				BD6EC206E6E878C8076F5B91 /* ConnectedDeviceManager.swift in Sources */,
+				B07ABE215AD959B110698EF8 /* ConnectionState.swift in Sources */,
+				0D42B12F3CCFF01AE347512E /* DashboardView.swift in Sources */,
+				C20716679DD7AA1A4381E06B /* DeviceDetailView.swift in Sources */,
+				E56B43092539CF7E89D13982 /* DeviceDiscoveryService.swift in Sources */,
+				C24CA3F34D24DC0127715363 /* DeviceIdentity.swift in Sources */,
+				E42C8ED8B4FED393A5C87AED /* DeviceListView.swift in Sources */,
+				A9C14335CECBC02E10659183 /* DevicePreviewFrame.swift in Sources */,
+				B3AFC0167C2EB4F642096806 /* DeviceSession.swift in Sources */,
+				55F218F47FE88C45B14A45A7 /* Errors.swift in Sources */,
+				0BC458ABD4BBBA5861599A72 /* FrameBuffer.swift in Sources */,
+				68B11DED68464FFC0FCA2939 /* InstagramAuthManager.swift in Sources */,
+				D7AF6B61512781CD8C75F32D /* InstagramPublishingService.swift in Sources */,
+				CED7523F59A081B5E4327A5A /* InstagramUploadModels.swift in Sources */,
+				B20FBC496C17C775AC3CBFC9 /* LogsView.swift in Sources */,
+				B93B009F2869925A15CE29FF /* MacHubModel.swift in Sources */,
+				DA582499ED86A92F407C227F /* MessageCodec.swift in Sources */,
+				EF3892B5B11E7A1E4DC8569F /* Messages.swift in Sources */,
+				0AE7E6FE274D47DAD27AB96F /* OBSBrowserSourceServer.swift in Sources */,
+				A84F8688DD047619B5195DBD /* OBSCameraHubApp.swift in Sources */,
+				15E9C07F7F15F437B2D6C28B /* OBSClipManager.swift in Sources */,
+				79F6E7A5D1048D48567D5B34 /* OBSConnectionView.swift in Sources */,
+				BF989B61325EEF5E4B061FA4 /* OBSModels.swift in Sources */,
+				582397B88601C320BD179CA6 /* OBSNativeFramePublisher.swift in Sources */,
+				CA29358DF591992A10DC6012 /* OBSPreviewService.swift in Sources */,
+				4AB967706395FB3071F47D03 /* OBSSceneManager.swift in Sources */,
+				CC6976592C7A1B3CA1173AA5 /* OBSWebSocketClient.swift in Sources */,
+				72FF77F9B6186C2499A15CCE /* ReconnectPolicy.swift in Sources */,
+				D524DA11AA1B26AB901EEA40 /* SampleBufferProvider.swift in Sources */,
+				5B1D73340511F8B62C8BB798 /* SceneMappingView.swift in Sources */,
+				EF1C5FF387B476D028B73575 /* StreamDecoder.swift in Sources */,
+				15370D4F3B18F861CCEAC9EE /* StreamModels.swift in Sources */,
+				D835E3A02661F8FB747A187F /* StreamReceiver.swift in Sources */,
+				5AD0F787118D1E6CA90DA99B /* VirtualCameraManager.swift in Sources */,
+				DFC3040F0ED0BC69615DDDE3 /* VirtualCameraView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AE9A01CAB3915A73F232B81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB0CE5B68D40E4A9EC685934 /* AppLogger.swift in Sources */,
+				124CB7F4BC4ED545848634EC /* ClipTrimmerService.swift in Sources */,
+				A47A52EE6D185348215C75E2 /* ConnectedDeviceManager.swift in Sources */,
+				B054A4AFEBA5C93B2BAEA6A7 /* ConnectionState.swift in Sources */,
+				156F74D9062CA2CCE56D294F /* DeviceDiscoveryService.swift in Sources */,
+				5137A6BB4376484D748B2FC9 /* DeviceIdentity.swift in Sources */,
+				48E55D88DD35D2CFE019FEF1 /* DevicePreviewFrame.swift in Sources */,
+				F1C0F175E42A65DDD88C16CB /* DeviceSession.swift in Sources */,
+				8E24E2031EDE49D279BB7CFB /* DeviceStateMachineTests.swift in Sources */,
+				21E1360CE0230C276F8CD01E /* Errors.swift in Sources */,
+				1803EC2BCBEF2F037E614D44 /* MessageCodec.swift in Sources */,
+				84A85ADA902E517C3A6A3FD6 /* MessageCodecTests.swift in Sources */,
+				ED433E6225398B6A45A0883B /* Messages.swift in Sources */,
+				C2CBDA20AA9A4AF774C46B96 /* OBSBrowserSourceServer.swift in Sources */,
+				9C6D75E308C54C3AE4B8E383 /* OBSClipManager.swift in Sources */,
+				821C500A39FE667AAF2729FB /* OBSModels.swift in Sources */,
+				A9428D9542399DAD289A6711 /* OBSNativeFramePublisher.swift in Sources */,
+				C799010659030FBC8A7013FD /* OBSPreviewService.swift in Sources */,
+				DAC21B4D6DC6740E3893B1F4 /* OBSRequestEncodingTests.swift in Sources */,
+				9F349C8A02124BC6FC5F68A0 /* OBSSceneManager.swift in Sources */,
+				CA433DDB1693A4ACF504C243 /* OBSWebSocketClient.swift in Sources */,
+				D762E3192060FCC3553320A5 /* ReconnectPolicy.swift in Sources */,
+				23E4E67D370EA8D966741A78 /* ReconnectPolicyTests.swift in Sources */,
+				20FA72A2C7360EC730A9A96F /* StreamModels.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		992551F64F2FA2FDC0D539C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EC59AB9E5619CD4DA25CB0B /* AppLogger.swift in Sources */,
+				19CE91B7EF979A9A705D383D /* AudioCaptureManager.swift in Sources */,
+				DAF9F26B178D787983E945AE /* CameraCaptureManager.swift in Sources */,
+				E3D6BBC7D7FD3CBAA31B32FB /* CameraPreviewView.swift in Sources */,
+				DD15EE2D82FDDF380053FECD /* CameraSettings.swift in Sources */,
+				1B735BB0FB0BACFF6C47B8FE /* CameraView.swift in Sources */,
+				C7E88DE6F8573DBE7B5309E8 /* ClipControlsView.swift in Sources */,
+				C9660BC107778B53DAA05AD1 /* ConnectionState.swift in Sources */,
+				31A66723EE2EA20184D1D003 /* DeviceIdentity.swift in Sources */,
+				423CEA3C554AF41FBE222CBE /* DeviceStatusView.swift in Sources */,
+				864EE41C7590F9F6AB6418C1 /* Errors.swift in Sources */,
+				8C8EFB85D9FEAFB725386EA4 /* HomeView.swift in Sources */,
+				6952ABD18436B5A1B812E90C /* IOSAppModel.swift in Sources */,
+				93F86939DC2A5F51F445925C /* MacHubDiscoveryService.swift in Sources */,
+				637429F43F85AA734B3BB9E3 /* MessageCodec.swift in Sources */,
+				3705E6A309D57F378826ECB0 /* Messages.swift in Sources */,
+				BC3801B9A1F86EA6D36B8BDC /* MiniPreviewView.swift in Sources */,
+				9EAF25ECD6BB2056DD626A43 /* NetworkStreamTransport.swift in Sources */,
+				88919D36370CB08D853295B2 /* OBSCommands.swift in Sources */,
+				5B95D95951AB92F75C811C43 /* OBSControlPanelView.swift in Sources */,
+				66C0729DF49787D69085B7E8 /* OBSModels.swift in Sources */,
+				99F54A6B1D8901AF3D30C08E /* OBSPhoneCamApp.swift in Sources */,
+				D29BD6E28022B8CDC9DDDCC5 /* OBSRemoteClient.swift in Sources */,
+				C968457091FF25683B6C9DE7 /* OBSStateStore.swift in Sources */,
+				0266AF17C37826906115AA24 /* Packetizer.swift in Sources */,
+				FE2D30A464C6C4994AA3CDE1 /* PreviewFrameStreamer.swift in Sources */,
+				2AC4C0081B499730C74D834E /* ReconnectManager.swift in Sources */,
+				B35E11B9D0A27247DF7055D1 /* ReconnectPolicy.swift in Sources */,
+				EFB0750996A64451375AA960 /* SceneSwitcherView.swift in Sources */,
+				ACCEFF14B3D44C4FB20791DC /* SettingsView.swift in Sources */,
+				BDF51CB6145720A68CF81659 /* StreamEncoder.swift in Sources */,
+				FC91AE6B201B27F51396CEE5 /* StreamModels.swift in Sources */,
+				B5FA5891538144FC90F858DD /* StreamTransport.swift in Sources */,
+				8358AEC235B6E076E1B66B4C /* USBPreferredTransport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6EF82357C897C4023307637 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0084C91F58A24F364620A996 /* OBSPhoneCamProvider.swift in Sources */,
+				517F52E4C1FC251304014FF7 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0CC08DFD3D35FC30B401AF37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MacApp/OBSCameraHubMac.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MacApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dinesys.obsphonecam.mac;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		31375B6A4FD9B1B150EF97F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dinesys.obsphonecam.OBSPhoneCamTests;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		40771EF38F355286091E1701 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = LBZ3286XZ7;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		5CC47F1FBACFF1C6E8514ACE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = iOSApp/OBSPhoneCamIOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = iOSApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dinesys.obsphonecam.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8B54DCB507BB4C0EB49A687B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = LBZ3286XZ7;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		954469D988FF7FFD6DF868F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MacApp/OBSCameraHubMac.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MacApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dinesys.obsphonecam.mac;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B30B7CD563907A99B47F27CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = iOSApp/OBSPhoneCamIOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = iOSApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dinesys.obsphonecam.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C36A702200D6C95A3DB0FA2E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dinesys.obsphonecam.OBSPhoneCamTests;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D6B6E95DFBF78271ED9B84EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CameraExtension/OBSCameraExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CameraExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dinesys.obsphonecam.mac.camera-extension";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		DC1317D00B21A302A6A5D690 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CameraExtension/OBSCameraExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CameraExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dinesys.obsphonecam.mac.camera-extension";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		311D6B1A6D6BE999B2C83A1A /* Build configuration list for PBXNativeTarget "OBSCameraExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D6B6E95DFBF78271ED9B84EA /* Debug */,
+				DC1317D00B21A302A6A5D690 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4477DCB181407ABAEFAD780A /* Build configuration list for PBXNativeTarget "OBSPhoneCam iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CC47F1FBACFF1C6E8514ACE /* Debug */,
+				B30B7CD563907A99B47F27CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5FF2FB316C9971727069B112 /* Build configuration list for PBXProject "OBSPhoneCam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40771EF38F355286091E1701 /* Debug */,
+				8B54DCB507BB4C0EB49A687B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8F2B36EAA9D33A1E2C6FD29E /* Build configuration list for PBXNativeTarget "OBSCameraHub Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0CC08DFD3D35FC30B401AF37 /* Debug */,
+				954469D988FF7FFD6DF868F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C66508413283222AA1B06155 /* Build configuration list for PBXNativeTarget "OBSPhoneCamTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31375B6A4FD9B1B150EF97F2 /* Debug */,
+				C36A702200D6C95A3DB0FA2E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 19F272468BB6D7C98D7CFF44 /* Project object */;
+}

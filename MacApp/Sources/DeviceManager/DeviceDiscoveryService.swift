@@ -1,0 +1,221 @@
+import Foundation
+import Network
+import Combine
+
+@MainActor
+final class DeviceDiscoveryService: ObservableObject {
+    @Published private(set) var isAdvertising = false
+    @Published private(set) var lastError: String?
+    private var listener: NWListener?
+    private var connections: [UUID: NWConnection] = [:]
+    private let manager: ConnectedDeviceManager
+    private let codec = MessageCodec()
+
+    init(manager: ConnectedDeviceManager) {
+        self.manager = manager
+    }
+
+    func start(port: UInt16 = 7777) throws {
+        stop()
+        let listener = try NWListener(using: .tcp, on: NWEndpoint.Port(rawValue: port)!)
+        listener.service = NWListener.Service(name: "OBS Camera Hub", type: "_obsphonecam._tcp")
+        listener.stateUpdateHandler = { [weak self] state in
+            Task { @MainActor in
+                switch state {
+                case .ready:
+                    self?.isAdvertising = true
+                    self?.lastError = nil
+                    AppLogger.shared.log(.info, .transport, "Device listener ready on \(port)")
+                case .failed(let error):
+                    self?.isAdvertising = false
+                    self?.lastError = error.localizedDescription
+                    AppLogger.shared.log(.error, .transport, "Device listener failed: \(error.localizedDescription)")
+                case .cancelled:
+                    self?.isAdvertising = false
+                default:
+                    break
+                }
+            }
+        }
+        listener.newConnectionHandler = { [weak self] connection in
+            Task { @MainActor in
+                self?.accept(connection)
+            }
+        }
+        listener.start(queue: DispatchQueue(label: "obsphonecam.mac.listener"))
+        self.listener = listener
+        isAdvertising = true
+        lastError = nil
+        AppLogger.shared.log(.info, .transport, "Device listener started on \(port)")
+    }
+
+    func stop() {
+        listener?.cancel()
+        listener = nil
+        connections.values.forEach { $0.cancel() }
+        connections.removeAll()
+        isAdvertising = false
+        lastError = nil
+    }
+
+    func broadcastOBSState(_ packet: OBSStatePacket) {
+        for connectionID in connections.keys {
+            sendOBSState(packet, to: connectionID)
+        }
+    }
+
+    func broadcastLightweightOBSState(_ packet: OBSStatePacket) {
+        let lightweightPacket = OBSStatePacket(status: packet.status, scenes: [], previewImageData: nil, audioMeters: packet.audioMeters)
+        broadcastOBSState(lightweightPacket)
+    }
+
+    private func accept(_ connection: NWConnection) {
+        let connectionID = UUID()
+        connections[connectionID] = connection
+        connection.start(queue: DispatchQueue(label: "obsphonecam.mac.connection.\(connectionID.uuidString)"))
+        receiveNext(on: connection, connectionID: connectionID)
+    }
+
+    private func receiveNext(on connection: NWConnection, connectionID: UUID) {
+        connection.receive(minimumIncompleteLength: 4, maximumLength: 4) { [weak self] lengthData, _, _, error in
+            guard let self else { return }
+            if let error {
+                Task { @MainActor in AppLogger.shared.log(.error, .transport, "Receive length failed: \(error.localizedDescription)") }
+                Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                return
+            }
+            guard let lengthData, lengthData.count == 4 else {
+                Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                return
+            }
+            let length = lengthData.reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+            connection.receive(minimumIncompleteLength: Int(length), maximumLength: Int(length)) { payloadData, _, _, error in
+                if let error {
+                    Task { @MainActor in AppLogger.shared.log(.error, .transport, "Receive payload failed: \(error.localizedDescription)") }
+                    Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                    return
+                }
+                guard let payloadData else {
+                    Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                    return
+                }
+                Task { @MainActor in
+                    do {
+                        let envelope = try self.codec.decode(PhoneCamEnvelope.self, from: payloadData)
+                        await self.manager.ingest(envelope, from: connectionID)
+                    } catch {
+                        AppLogger.shared.log(.error, .transport, "Decode failed: \(error.localizedDescription)")
+                    }
+                    self.receiveNext(on: connection, connectionID: connectionID)
+                }
+            }
+        }
+    }
+
+    private func sendOBSState(_ packet: OBSStatePacket, to connectionID: UUID) {
+        guard let connection = connections[connectionID] else { return }
+        do {
+            let envelope = try codec.envelope(.obsState, deviceID: nil, payload: packet)
+            let data = try codec.encode(envelope)
+            var length = UInt32(data.count).bigEndian
+            let framed = Data(bytes: &length, count: MemoryLayout<UInt32>.size) + data
+            connection.send(content: framed, completion: .contentProcessed { error in
+                if let error {
+                    Task { @MainActor in
+                        AppLogger.shared.log(.error, .transport, "OBS state send failed: \(error.localizedDescription)")
+                        self.connections.removeValue(forKey: connectionID)
+                    }
+                }
+            })
+        } catch {
+            AppLogger.shared.log(.error, .transport, "OBS state encode failed: \(error.localizedDescription)")
+        }
+    }
+}
+
+@MainActor
+final class OBSDownlinkService: ObservableObject {
+    @Published private(set) var isAdvertising = false
+    @Published private(set) var connectedClientCount = 0
+    private var listener: NWListener?
+    private var connections: [UUID: NWConnection] = [:]
+    private let codec = MessageCodec()
+
+    var hasClients: Bool { !connections.isEmpty }
+
+    func start(port: UInt16 = 7778) throws {
+        guard listener == nil else { return }
+        let listener = try NWListener(using: .tcp, on: NWEndpoint.Port(rawValue: port)!)
+        listener.service = NWListener.Service(name: "OBS Camera Hub Preview", type: "_obsphonecam-obs._tcp")
+        listener.newConnectionHandler = { [weak self] connection in
+            Task { @MainActor in
+                self?.accept(connection)
+            }
+        }
+        listener.start(queue: DispatchQueue(label: "obsphonecam.mac.obs-downlink.listener"))
+        self.listener = listener
+        isAdvertising = true
+        AppLogger.shared.log(.info, .transport, "OBS downlink listener started on \(port)")
+    }
+
+    func stop() {
+        listener?.cancel()
+        listener = nil
+        connections.values.forEach { $0.cancel() }
+        connections.removeAll()
+        connectedClientCount = 0
+        isAdvertising = false
+    }
+
+    func broadcastOBSState(_ packet: OBSStatePacket) {
+        for connectionID in connections.keys {
+            sendOBSState(packet, to: connectionID)
+        }
+    }
+
+    private func accept(_ connection: NWConnection) {
+        let connectionID = UUID()
+        connections[connectionID] = connection
+        connectedClientCount = connections.count
+        connection.stateUpdateHandler = { [weak self] state in
+            switch state {
+            case .failed(let error):
+                Task { @MainActor in
+                    AppLogger.shared.log(.error, .transport, "OBS downlink failed: \(error.localizedDescription)")
+                    self?.remove(connectionID)
+                }
+            case .cancelled:
+                Task { @MainActor in self?.remove(connectionID) }
+            default:
+                break
+            }
+        }
+        connection.start(queue: DispatchQueue(label: "obsphonecam.mac.obs-downlink.\(connectionID.uuidString)"))
+        AppLogger.shared.log(.info, .transport, "OBS downlink client connected")
+    }
+
+    private func remove(_ connectionID: UUID) {
+        connections.removeValue(forKey: connectionID)
+        connectedClientCount = connections.count
+    }
+
+    private func sendOBSState(_ packet: OBSStatePacket, to connectionID: UUID) {
+        guard let connection = connections[connectionID] else { return }
+        do {
+            let envelope = try codec.envelope(.obsState, deviceID: nil, payload: packet)
+            let data = try codec.encode(envelope)
+            var length = UInt32(data.count).bigEndian
+            let framed = Data(bytes: &length, count: MemoryLayout<UInt32>.size) + data
+            connection.send(content: framed, completion: .contentProcessed { error in
+                if let error {
+                    Task { @MainActor in
+                        AppLogger.shared.log(.error, .transport, "OBS downlink send failed: \(error.localizedDescription)")
+                        self.remove(connectionID)
+                    }
+                }
+            })
+        } catch {
+            AppLogger.shared.log(.error, .transport, "OBS downlink encode failed: \(error.localizedDescription)")
+        }
+    }
+}

@@ -1,0 +1,121 @@
+name: OBSPhoneCam
+options:
+  bundleIdPrefix: com.dinesys.obsphonecam
+  deploymentTarget:
+    iOS: '17.0'
+    macOS: '14.0'
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+    DEVELOPMENT_TEAM: LBZ3286XZ7
+    CODE_SIGN_STYLE: Automatic
+targets:
+  OBSPhoneCam iOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: Shared/Sources
+      - path: iOSApp/Sources
+    info:
+      path: iOSApp/Info.plist
+      properties:
+        NSCameraUsageDescription: OBS Phone Cam necesita usar la cámara del iPhone para enviar video al Mac Hub y a OBS.
+        NSMicrophoneUsageDescription: OBS Phone Cam necesita usar el micrófono del iPhone para enviar audio junto con la cámara.
+        NSLocalNetworkUsageDescription: OBS Phone Cam necesita acceder a la red local para conectarse con OBS Camera Hub en tu Mac.
+        NSBonjourServices:
+          - _obsphonecam._tcp
+          - _obsphonecam-obs._tcp
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoadsInLocalNetworking: true
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UILaunchScreen: {}
+    entitlements:
+      path: iOSApp/OBSPhoneCamIOS.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dinesys.obsphonecam.ios
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+  OBSCameraHub Mac:
+    type: application
+    platform: macOS
+    sources:
+      - path: Shared/Sources
+      - path: MacApp/Sources
+    info:
+      path: MacApp/Info.plist
+      properties:
+        NSLocalNetworkUsageDescription: OBS Camera Hub necesita aceptar conexiones de OBS Phone Cam desde tus dispositivos en la red local.
+        NSBonjourServices:
+          - _obsphonecam._tcp
+          - _obsphonecam-obs._tcp
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoadsInLocalNetworking: true
+    entitlements:
+      path: MacApp/OBSCameraHubMac.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dinesys.obsphonecam.mac
+  OBSCameraExtension:
+    type: system-extension
+    platform: macOS
+    sources:
+      - path: CameraExtension/Sources
+    info:
+      path: CameraExtension/Info.plist
+      properties:
+        NSSystemExtensionUsageDescription: OBS Phone Cam instala una cámara virtual nativa para que OBS pueda usar el iPhone como fuente de video.
+        CMIOExtension:
+          CMIOExtensionMachServiceName: $(TeamIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)
+    entitlements:
+      path: CameraExtension/OBSCameraExtension.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dinesys.obsphonecam.mac.camera-extension
+        SKIP_INSTALL: NO
+        REGISTER_APP_GROUPS: YES
+  OBSPhoneCamTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Shared/Sources
+      - path: MacApp/Sources/OBS
+      - path: MacApp/Sources/DeviceManager
+      - path: Tests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  OBSPhoneCam iOS:
+    build:
+      targets:
+        OBSPhoneCam iOS: all
+    run:
+      config: Debug
+  OBSCameraHub Mac:
+    build:
+      targets:
+        OBSCameraHub Mac: all
+    run:
+      config: Debug
+  OBSCameraExtension:
+    build:
+      targets:
+        OBSCameraExtension: all
+    run:
+      config: Debug
+  OBSPhoneCamTests:
+    build:
+      targets:
+        OBSPhoneCamTests: all
+    test:
+      targets:
+        - OBSPhoneCamTests
