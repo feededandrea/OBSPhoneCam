@@ -23,6 +23,10 @@ final class OBSNativeFramePublisher {
     }
 
     private static let headerSize = 64
+    private static let outputWidth = 1920
+    private static let outputHeight = 1080
+    private static let outputBytesPerRow = outputWidth * 4
+    private static let outputPayloadSize = outputBytesPerRow * outputHeight
     private let queue = DispatchQueue(label: "com.dinesys.obsphonecam.native-frame-publisher", qos: .userInitiated)
     private let outputURL = URL(fileURLWithPath: "/tmp/obsphonecam-framebuffer.shm")
     private let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -116,105 +120,64 @@ final class OBSNativeFramePublisher {
             return
         }
 
-        let width = image.width
-        let height = image.height
-        guard width > 0, height > 0 else { return }
-
-        let bytesPerPixel = 4
-        let bytesPerRow = width * bytesPerPixel
-        var pixels = Data(count: bytesPerRow * height)
-
-        let ok = pixels.withUnsafeMutableBytes { rawBuffer -> Bool in
-            guard let baseAddress = rawBuffer.baseAddress else { return false }
-            let bitmapInfo = CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
-            guard let context = CGContext(
-                data: baseAddress,
-                width: width,
-                height: height,
-                bitsPerComponent: 8,
-                bytesPerRow: bytesPerRow,
-                space: colorSpace,
-                bitmapInfo: bitmapInfo
-            ) else {
-                return false
-            }
-            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
-            return true
+        guard image.width > 0, image.height > 0,
+              let context = prepareOutputContext(sequence: sequence) else {
+            return
         }
 
-        guard ok else { return }
-
-        writeFrame(width: width, height: height, bytesPerRow: bytesPerRow, pixels: pixels, sequence: sequence)
+        context.draw(image, in: aspectFitRect(sourceWidth: image.width, sourceHeight: image.height))
+        finishOutputFrame(sequence: sequence)
     }
 
     private func publish(_ pixelBuffer: CVPixelBuffer, sequence: UInt64) {
         guard shouldPublish(sequence: sequence) else { return }
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
-        guard width > 0, height > 0 else { return }
-
-        let bytesPerRow = width * 4
-        let payloadSize = bytesPerRow * height
-        guard let payloadAddress = prepareFrameWrite(
-            width: width,
-            height: height,
-            bytesPerRow: bytesPerRow,
-            payloadSize: payloadSize,
-            sequence: sequence
-        ) else {
-            return
-        }
-
-        let bitmapInfo = CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
-        guard let context = CGContext(
-            data: payloadAddress,
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bytesPerRow: bytesPerRow,
-            space: colorSpace,
-            bitmapInfo: bitmapInfo
-        ) else {
+        let sourceWidth = CVPixelBufferGetWidth(pixelBuffer)
+        let sourceHeight = CVPixelBufferGetHeight(pixelBuffer)
+        guard sourceWidth > 0, sourceHeight > 0,
+              let context = prepareOutputContext(sequence: sequence) else {
             return
         }
 
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         guard let image = ciContext.createCGImage(ciImage, from: ciImage.extent) else { return }
-        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
-        finishFrameWrite(width: width, height: height, bytesPerRow: bytesPerRow, payloadSize: payloadSize, sequence: sequence)
+        context.draw(image, in: aspectFitRect(sourceWidth: sourceWidth, sourceHeight: sourceHeight))
+        finishOutputFrame(sequence: sequence)
     }
 
-    private func writeFrame(width: Int, height: Int, bytesPerRow: Int, pixels: Data, sequence: UInt64) {
-        guard let payloadAddress = prepareFrameWrite(
-            width: width,
-            height: height,
-            bytesPerRow: bytesPerRow,
-            payloadSize: pixels.count,
-            sequence: sequence
+    private func prepareOutputContext(sequence: UInt64) -> CGContext? {
+        guard let payloadAddress = prepareFrameWrite(sequence: sequence) else {
+            return nil
+        }
+
+        let bitmapInfo = CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
+        guard let context = CGContext(
+            data: payloadAddress,
+            width: Self.outputWidth,
+            height: Self.outputHeight,
+            bitsPerComponent: 8,
+            bytesPerRow: Self.outputBytesPerRow,
+            space: colorSpace,
+            bitmapInfo: bitmapInfo
         ) else {
-            return
+            return nil
         }
-
-        pixels.withUnsafeBytes { rawBuffer in
-            if let baseAddress = rawBuffer.baseAddress {
-                payloadAddress.copyMemory(from: baseAddress, byteCount: pixels.count)
-            }
-        }
-        finishFrameWrite(width: width, height: height, bytesPerRow: bytesPerRow, payloadSize: pixels.count, sequence: sequence)
+        context.setFillColor(CGColor(gray: 0, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: Self.outputWidth, height: Self.outputHeight))
+        return context
     }
 
-    private func prepareFrameWrite(width: Int, height: Int, bytesPerRow: Int, payloadSize: Int, sequence: UInt64) -> UnsafeMutableRawPointer? {
-        let requiredSize = Self.headerSize + payloadSize
+    private func prepareFrameWrite(sequence: UInt64) -> UnsafeMutableRawPointer? {
+        let requiredSize = Self.headerSize + Self.outputPayloadSize
         guard ensureMapping(size: requiredSize) else { return nil }
         guard let mappedPointer else { return nil }
 
         var header = Header(
-            width: UInt32(width),
-            height: UInt32(height),
-            bytesPerRow: UInt32(bytesPerRow),
+            width: UInt32(Self.outputWidth),
+            height: UInt32(Self.outputHeight),
+            bytesPerRow: UInt32(Self.outputBytesPerRow),
             sequence: sequence,
             timestampNanos: monotonicTimestampNanos(),
-            payloadSize: UInt64(payloadSize),
+            payloadSize: UInt64(Self.outputPayloadSize),
             reserved0: sequence &* 2 &+ 1,
             reserved1: UInt64(requiredSize)
         )
@@ -222,19 +185,33 @@ final class OBSNativeFramePublisher {
         return mappedPointer.advanced(by: Int(header.headerSize))
     }
 
-    private func finishFrameWrite(width: Int, height: Int, bytesPerRow: Int, payloadSize: Int, sequence: UInt64) {
+    private func finishOutputFrame(sequence: UInt64) {
         var header = Header(
-            width: UInt32(width),
-            height: UInt32(height),
-            bytesPerRow: UInt32(bytesPerRow),
+            width: UInt32(Self.outputWidth),
+            height: UInt32(Self.outputHeight),
+            bytesPerRow: UInt32(Self.outputBytesPerRow),
             sequence: sequence,
             timestampNanos: monotonicTimestampNanos(),
-            payloadSize: UInt64(payloadSize),
+            payloadSize: UInt64(Self.outputPayloadSize),
             reserved0: sequence &* 2,
-            reserved1: UInt64(Self.headerSize + payloadSize)
+            reserved1: UInt64(Self.headerSize + Self.outputPayloadSize)
         )
         writeHeader(&header)
         markPublished(sequence: sequence)
+    }
+
+    private func aspectFitRect(sourceWidth: Int, sourceHeight: Int) -> CGRect {
+        let xScale = CGFloat(Self.outputWidth) / CGFloat(sourceWidth)
+        let yScale = CGFloat(Self.outputHeight) / CGFloat(sourceHeight)
+        let scale = min(xScale, yScale)
+        let width = CGFloat(sourceWidth) * scale
+        let height = CGFloat(sourceHeight) * scale
+        return CGRect(
+            x: (CGFloat(Self.outputWidth) - width) / 2,
+            y: (CGFloat(Self.outputHeight) - height) / 2,
+            width: width,
+            height: height
+        ).integral
     }
 
     private func writeHeader(_ header: inout Header) {
