@@ -8,6 +8,8 @@ final class DeviceDiscoveryService: ObservableObject {
     @Published private(set) var lastError: String?
     private var listener: NWListener?
     private var connections: [UUID: NWConnection] = [:]
+    private var obsStateSendInFlight: Set<UUID> = []
+    private var pendingOBSStatePackets: [UUID: OBSStatePacket] = [:]
     private let manager: ConnectedDeviceManager
     private let codec = MessageCodec()
 
@@ -59,6 +61,8 @@ final class DeviceDiscoveryService: ObservableObject {
         listener = nil
         connections.values.forEach { $0.cancel() }
         connections.removeAll()
+        obsStateSendInFlight.removeAll()
+        pendingOBSStatePackets.removeAll()
         isAdvertising = false
         lastError = nil
     }
@@ -87,22 +91,22 @@ final class DeviceDiscoveryService: ObservableObject {
             guard let self else { return }
             if let error {
                 Task { @MainActor in AppLogger.shared.log(.error, .transport, "Receive length failed: \(error.localizedDescription)") }
-                Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                Task { @MainActor in self.remove(connectionID) }
                 return
             }
             guard let lengthData, lengthData.count == 4 else {
-                Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                Task { @MainActor in self.remove(connectionID) }
                 return
             }
             let length = lengthData.reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
             connection.receive(minimumIncompleteLength: Int(length), maximumLength: Int(length)) { payloadData, _, _, error in
                 if let error {
                     Task { @MainActor in AppLogger.shared.log(.error, .transport, "Receive payload failed: \(error.localizedDescription)") }
-                    Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                    Task { @MainActor in self.remove(connectionID) }
                     return
                 }
                 guard let payloadData else {
-                    Task { @MainActor in self.connections.removeValue(forKey: connectionID) }
+                    Task { @MainActor in self.remove(connectionID) }
                     return
                 }
                 Self.decodeAndIngest(payloadData, connectionID: connectionID, manager: manager)
@@ -154,11 +158,22 @@ final class DeviceDiscoveryService: ObservableObject {
     private func close(connectionID: UUID, reason: String) {
         AppLogger.shared.log(.warning, .reconnect, "Closing device connection because \(reason)")
         connections[connectionID]?.cancel()
+        remove(connectionID)
+    }
+
+    private func remove(_ connectionID: UUID) {
         connections.removeValue(forKey: connectionID)
+        obsStateSendInFlight.remove(connectionID)
+        pendingOBSStatePackets.removeValue(forKey: connectionID)
     }
 
     private func sendOBSState(_ packet: OBSStatePacket, to connectionID: UUID) {
         guard let connection = connections[connectionID] else { return }
+        guard !obsStateSendInFlight.contains(connectionID) else {
+            pendingOBSStatePackets[connectionID] = packet
+            return
+        }
+        obsStateSendInFlight.insert(connectionID)
         do {
             let envelope = try codec.envelope(.obsState, deviceID: nil, payload: packet)
             let data = try codec.encode(envelope)
@@ -168,11 +183,19 @@ final class DeviceDiscoveryService: ObservableObject {
                 if let error {
                     Task { @MainActor in
                         AppLogger.shared.log(.error, .transport, "OBS state send failed: \(error.localizedDescription)")
-                        self.connections.removeValue(forKey: connectionID)
+                        self.remove(connectionID)
+                    }
+                } else {
+                    Task { @MainActor in
+                        self.obsStateSendInFlight.remove(connectionID)
+                        if let latest = self.pendingOBSStatePackets.removeValue(forKey: connectionID) {
+                            self.sendOBSState(latest, to: connectionID)
+                        }
                     }
                 }
             })
         } catch {
+            obsStateSendInFlight.remove(connectionID)
             AppLogger.shared.log(.error, .transport, "OBS state encode failed: \(error.localizedDescription)")
         }
     }
@@ -184,6 +207,8 @@ final class OBSDownlinkService: ObservableObject {
     @Published private(set) var connectedClientCount = 0
     private var listener: NWListener?
     private var connections: [UUID: NWConnection] = [:]
+    private var obsStateSendInFlight: Set<UUID> = []
+    private var pendingOBSStatePackets: [UUID: OBSStatePacket] = [:]
     private let codec = MessageCodec()
 
     var hasClients: Bool { !connections.isEmpty }
@@ -208,6 +233,8 @@ final class OBSDownlinkService: ObservableObject {
         listener = nil
         connections.values.forEach { $0.cancel() }
         connections.removeAll()
+        obsStateSendInFlight.removeAll()
+        pendingOBSStatePackets.removeAll()
         connectedClientCount = 0
         isAdvertising = false
     }
@@ -241,11 +268,18 @@ final class OBSDownlinkService: ObservableObject {
 
     private func remove(_ connectionID: UUID) {
         connections.removeValue(forKey: connectionID)
+        obsStateSendInFlight.remove(connectionID)
+        pendingOBSStatePackets.removeValue(forKey: connectionID)
         connectedClientCount = connections.count
     }
 
     private func sendOBSState(_ packet: OBSStatePacket, to connectionID: UUID) {
         guard let connection = connections[connectionID] else { return }
+        guard !obsStateSendInFlight.contains(connectionID) else {
+            pendingOBSStatePackets[connectionID] = packet
+            return
+        }
+        obsStateSendInFlight.insert(connectionID)
         do {
             let envelope = try codec.envelope(.obsState, deviceID: nil, payload: packet)
             let data = try codec.encode(envelope)
@@ -257,9 +291,17 @@ final class OBSDownlinkService: ObservableObject {
                         AppLogger.shared.log(.error, .transport, "OBS downlink send failed: \(error.localizedDescription)")
                         self.remove(connectionID)
                     }
+                } else {
+                    Task { @MainActor in
+                        self.obsStateSendInFlight.remove(connectionID)
+                        if let latest = self.pendingOBSStatePackets.removeValue(forKey: connectionID) {
+                            self.sendOBSState(latest, to: connectionID)
+                        }
+                    }
                 }
             })
         } catch {
+            obsStateSendInFlight.remove(connectionID)
             AppLogger.shared.log(.error, .transport, "OBS downlink encode failed: \(error.localizedDescription)")
         }
     }

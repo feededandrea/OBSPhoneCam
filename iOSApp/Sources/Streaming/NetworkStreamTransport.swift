@@ -14,7 +14,7 @@ private final class ContinuationResumeGate: @unchecked Sendable {
     }
 }
 
-final class NetworkStreamTransport: StreamTransport {
+final class NetworkStreamTransport: StreamTransport, @unchecked Sendable {
     private let codec = MessageCodec()
     private var connection: NWConnection?
     private var controlConnection: NWConnection?
@@ -192,7 +192,7 @@ final class NetworkStreamTransport: StreamTransport {
 
     func sendStreamPacket(_ packet: StreamPacket) async throws {
         if packet.codec == .h264 {
-            try await sendEnvelope(type: .streamPacket, deviceID: packet.deviceID, payload: packet, timeout: 1.0)
+            try await sendEnvelope(type: .streamPacket, deviceID: packet.deviceID, payload: packet, timeout: 0.45)
             return
         }
 

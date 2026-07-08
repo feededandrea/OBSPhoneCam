@@ -19,7 +19,6 @@ final class ConnectedDeviceManager: ObservableObject {
                 guard let self else { return }
                 let deviceID = self.sessions.keys.sorted().first ?? "iphone"
                 self.previewFrames[deviceID] = DevicePreviewFrame(deviceID: deviceID, sequence: sequence, imageData: data, updatedAt: Date())
-                self.objectWillChange.send()
             }
         }
         streamDecoder.onPixelBuffer = { pixelBuffer, sequence in
@@ -50,6 +49,7 @@ final class ConnectedDeviceManager: ObservableObject {
     func ingest(_ envelope: PhoneCamEnvelope, from connectionID: UUID) async {
         let codec = MessageCodec()
         do {
+            var shouldRefreshSnapshots = true
             switch envelope.type {
             case .handshake:
                 let packet = try codec.payload(HandshakePacket.self, from: envelope)
@@ -64,7 +64,7 @@ final class ConnectedDeviceManager: ObservableObject {
                 onControlPacket?(packet, envelope.deviceID)
             case .streamPacket:
                 let packet = try codec.payload(StreamPacket.self, from: envelope)
-                sessions[packet.deviceID]?.receiveStreamPacket()
+                shouldRefreshSnapshots = sessions[packet.deviceID]?.receiveStreamPacket() ?? false
                 if packet.kind == .videoKeyframe || packet.kind == .videoDelta {
                     if packet.codec == .jpeg {
                         previewFrames[packet.deviceID] = DevicePreviewFrame(deviceID: packet.deviceID, sequence: packet.sequence, imageData: packet.data, updatedAt: Date())
@@ -76,7 +76,9 @@ final class ConnectedDeviceManager: ObservableObject {
             default:
                 break
             }
-            refreshSnapshots()
+            if shouldRefreshSnapshots {
+                refreshSnapshots()
+            }
         } catch {
             logger.log(.error, .device, "Failed ingesting message: \(error.localizedDescription)", deviceID: envelope.deviceID)
         }
@@ -111,7 +113,7 @@ final class ConnectedDeviceManager: ObservableObject {
     }
 
     func ingestStreamPacket(_ packet: StreamPacket) {
-        sessions[packet.deviceID]?.receiveStreamPacket()
+        let shouldRefreshSnapshots = sessions[packet.deviceID]?.receiveStreamPacket() ?? false
         if packet.kind == .videoKeyframe || packet.kind == .videoDelta {
             if packet.codec == .jpeg {
                 previewFrames[packet.deviceID] = DevicePreviewFrame(deviceID: packet.deviceID, sequence: packet.sequence, imageData: packet.data, updatedAt: Date())
@@ -120,7 +122,9 @@ final class ConnectedDeviceManager: ObservableObject {
                 streamDecoder.decodeVideo(packet)
             }
         }
-        refreshSnapshots()
+        if shouldRefreshSnapshots {
+            refreshSnapshots()
+        }
     }
 
     private func refreshSnapshots() {

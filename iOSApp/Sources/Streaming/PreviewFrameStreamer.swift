@@ -18,6 +18,14 @@ final class PreviewFrameStreamer: @unchecked Sendable {
     private var frameInFlight = false
     private var frameInFlightStartedAt: Date?
     private var pipelineStallCount = 0
+    private var maxFramePipelineAge: TimeInterval {
+        switch configuredMode {
+        case .lowLatency:
+            return configuredQuality == .max1080p40 ? 0.45 : 0.65
+        case .stability:
+            return 0.9
+        }
+    }
 
     init(deviceID: String, transport: NetworkStreamTransport, targetFPS _: Double = 30) {
         self.deviceID = deviceID
@@ -152,14 +160,15 @@ final class PreviewFrameStreamer: @unchecked Sendable {
     private func reserveFramePipeline() -> Bool {
         lock.lock()
         defer { lock.unlock() }
+        let allowedAge = maxFramePipelineAge
         if frameInFlight,
            let frameInFlightStartedAt,
-           Date().timeIntervalSince(frameInFlightStartedAt) > 1.2 {
+           Date().timeIntervalSince(frameInFlightStartedAt) > allowedAge {
             frameInFlight = false
             self.frameInFlightStartedAt = nil
             pipelineStallCount += 1
             Task {
-                await AppLogger.shared.log(.error, .encoder, "Frame pipeline was stuck; releasing stale in-flight frame", deviceID: deviceID)
+                await AppLogger.shared.log(.error, .encoder, "Frame pipeline was stuck for >\(String(format: "%.2f", allowedAge))s; releasing stale in-flight frame", deviceID: deviceID)
             }
         }
         guard !frameInFlight else { return false }

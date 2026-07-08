@@ -51,8 +51,11 @@ final class DeviceSession: ObservableObject, Identifiable {
         if state == .degraded || state == .reconnecting || state == .handshaking { transition(to: .streaming) }
     }
 
-    func receiveStreamPacket() {
-        if state != .streaming { transition(to: .streaming) }
+    @discardableResult
+    func receiveStreamPacket() -> Bool {
+        guard state != .streaming else { return false }
+        transition(to: .streaming)
+        return true
     }
 
     func restart(reason: ReconnectReason) {
